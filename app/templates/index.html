@@ -18,65 +18,29 @@
         .card-body {
             padding: 30px;
         }
-        h4 {
-            font-weight: 600;
-            color: #333;
-        }
-        .btn {
-            font-weight: 600;
-        }
-        .btn-primary {
-            background-color: #4CAF50;
-            border-color: #4CAF50;
-        }
-        .btn-primary:hover {
-            background-color: #45a049;
-            border-color: #45a049;
-        }
-        .btn-danger {
-            background-color: #ff4747;
-            border-color: #ff4747;
-        }
-        .btn-danger:hover {
-            background-color: #e04343;
-            border-color: #e04343;
-        }
-        .table th, .table td {
-            vertical-align: middle;
-        }
-        .table-responsive {
-            margin-top: 20px;
-        }
-        .input-group-text {
-            background-color: #f0f0f0;
-        }
         .alert {
             display: none;
         }
     </style>
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchCursos();
+            document.getElementById("submitButton").addEventListener("click", addCurso);
+        });
+        
         async function fetchCursos() {
             const token = localStorage.getItem("token");
-
-            if (!token) {
-                window.location.href = "/";
-                return;
-            }
-
+            if (!token) return window.location.href = "/";
+            
             try {
-                const response = await fetch("/cursos/", {
-                    headers: { "Authorization": `Bearer ${token}` }
-                });
-
+                const response = await fetch("/cursos/", { headers: { "Authorization": `Bearer ${token}` } });
                 if (response.ok) {
                     const cursos = await response.json();
                     renderCursos(cursos);
                 } else {
-                    console.error("Erro ao carregar cursos:", await response.text());
                     showError("Erro ao carregar cursos.");
                 }
             } catch (error) {
-                console.error("Erro ao conectar:", error);
                 showError("Erro ao conectar ao servidor.");
             }
         }
@@ -86,61 +50,76 @@
             errorAlert.innerText = message;
             errorAlert.style.display = "block";
         }
-
-        async function addOrEditCurso() {
+        
+        async function addCurso() {
             const name = document.getElementById("name").value;
             const description = document.getElementById("description").value;
             const time = document.getElementById("time").value;
             const token = localStorage.getItem("token");
-
+            
             try {
                 const response = await fetch("/cursos/", {
                     method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ name, description, time: parseInt(time) }),
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ name, description, time: parseInt(time) })
                 });
-
                 if (response.ok) {
                     fetchCursos();
                     clearForm();
                 } else {
-                    console.error("Erro ao salvar curso:", await response.text());
                     showError("Erro ao salvar curso.");
                 }
             } catch (error) {
-                console.error("Erro ao salvar curso:", error);
                 showError("Erro ao salvar curso.");
             }
         }
-
-        async function deleteCurso(cursoId) {
+        
+        async function updateCurso(id) {
+            const name = document.getElementById("name").value;
+            const description = document.getElementById("description").value;
+            const time = document.getElementById("time").value;
             const token = localStorage.getItem("token");
-
+            
             try {
-                const response = await fetch(`/cursos/${cursoId}`, {
-                    method: "DELETE",
-                    headers: { "Authorization": `Bearer ${token}` }
+                const response = await fetch(`/cursos/${id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+                    body: JSON.stringify({ name, description, time: parseInt(time) })
                 });
-
                 if (response.ok) {
                     fetchCursos();
+                    clearForm();
                 } else {
-                    console.error("Erro ao deletar curso");
-                    showError("Erro ao deletar curso.");
+                    showError("Erro ao atualizar curso.");
                 }
             } catch (error) {
-                console.error("Erro ao deletar curso:", error);
-                showError("Erro ao deletar curso.");
+                showError("Erro ao atualizar curso.");
             }
         }
-
+        
+        function editCurso(id, name, description, time) {
+            document.getElementById("name").value = name;
+            document.getElementById("description").value = description;
+            document.getElementById("time").value = time;
+            
+            const submitButton = document.getElementById("submitButton");
+            submitButton.innerText = "Salvar Alterações";
+            submitButton.onclick = function () { updateCurso(id); };
+        }
+        
+        function clearForm() {
+            document.getElementById("name").value = "";
+            document.getElementById("description").value = "";
+            document.getElementById("time").value = "";
+            
+            const submitButton = document.getElementById("submitButton");
+            submitButton.innerText = "Adicionar";
+            submitButton.onclick = addCurso;
+        }
+        
         function renderCursos(cursos) {
             const tableBody = document.getElementById("cursosTableBody");
             tableBody.innerHTML = "";
-
             cursos.forEach((curso) => {
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -149,115 +128,51 @@
                     <td>${curso.description}</td>
                     <td>${curso.time}</td>
                     <td>
-                        <div class="d-flex justify-content-start">
-                            <button class="btn btn-warning me-2" onclick="editCurso(${curso.id}, '${curso.name}', '${curso.description}', ${curso.time})">Editar</button>
-                            <button class="btn btn-danger ms-2" onclick="deleteCurso(${curso.id})">Excluir</button>
-                        </div>
-                    </td>
-                `;
+                        <button class="btn btn-warning me-2" onclick="editCurso(${curso.id}, '${curso.name}', '${curso.description}', ${curso.time})">Editar</button>
+                        <button class="btn btn-danger" onclick="deleteCurso(${curso.id})">Excluir</button>
+                    </td>`;
                 tableBody.appendChild(row);
             });
         }
 
-        function editCurso(id, name, description, time) {
-            document.getElementById("name").value = name;
-            document.getElementById("description").value = description;
-            document.getElementById("time").value = time;
-            document.getElementById("submitButton").onclick = function() {
-                updateCurso(id);
-            };
-        }
-
-        async function updateCurso(id) {
-            const name = document.getElementById("name").value;
-            const description = document.getElementById("description").value;
-            const time = document.getElementById("time").value;
+        async function deleteCurso(cursoId) {
             const token = localStorage.getItem("token");
-
             try {
-                const response = await fetch(`/cursos/${id}`, {
-                    method: "PUT",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ name, description, time: parseInt(time) }),
-                });
-
-                if (response.ok) {
-                    fetchCursos();
-                    clearForm();
-                } else {
-                    console.error("Erro ao atualizar curso:", await response.text());
-                    showError("Erro ao atualizar curso.");
-                }
+                const response = await fetch(`/cursos/${cursoId}`, { method: "DELETE", headers: { "Authorization": `Bearer ${token}` } });
+                if (response.ok) fetchCursos();
+                else showError("Erro ao deletar curso.");
             } catch (error) {
-                console.error("Erro ao atualizar curso:", error);
-                showError("Erro ao atualizar curso.");
+                showError("Erro ao deletar curso.");
             }
-        }
-
-        function clearForm() {
-            document.getElementById("name").value = "";
-            document.getElementById("description").value = "";
-            document.getElementById("time").value = "";
-            document.getElementById("submitButton").onclick = addOrEditCurso;
         }
 
         function logout() {
             localStorage.removeItem("token");
             window.location.href = "/";
         }
-
-        document.addEventListener("DOMContentLoaded", fetchCursos);
     </script>
 </head>
 <body>
-    <section class="vh-100" style="background-color: #f7f9fc;">
-        <div class="container py-5 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col-12 col-md-8 col-lg-7">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="text-center mb-4">Gerenciamento de Cursos</h4>
-                            <div class="alert alert-danger" id="error" role="alert"></div>
-                            
-                            <div class="row mb-4">
-                                <div class="col-md-4">
-                                    <input type="text" id="name" class="form-control" placeholder="Nome do curso" required />
-                                </div>
-                                <div class="col-md-4">
-                                    <input type="text" id="description" class="form-control" placeholder="Descrição" required />
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="number" id="time" class="form-control" placeholder="Duração (horas)" required />
-                                </div>
-                                <div class="col-md-2 d-grid">
-                                    <button id="submitButton" class="btn btn-primary">Adicionar</button>
-                                </div>
-                            </div>
-
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover">
-                                    <thead class="bg-dark text-white">
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Nome</th>
-                                            <th>Descrição</th>
-                                            <th>Duração</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="cursosTableBody"></tbody>
-                                </table>
-                            </div>
-
-                            <button onclick="logout()" class="btn btn-danger w-100 mt-3">Sair</button>
-                        </div>
-                    </div>
+    <div class="container py-5">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="text-center mb-4">Gerenciamento de Cursos</h4>
+                <div class="alert alert-danger" id="error"></div>
+                <div class="mb-4 d-flex gap-2">
+                    <input type="text" id="name" class="form-control" placeholder="Nome do curso" />
+                    <input type="text" id="description" class="form-control" placeholder="Descrição" />
+                    <input type="number" id="time" class="form-control" placeholder="Duração" />
+                    <button id="submitButton" class="btn btn-primary">Adicionar</button>
                 </div>
+                <table class="table table-bordered">
+                    <thead class="table-dark">
+                        <tr><th>#</th><th>Nome</th><th>Descrição</th><th>Duração</th><th>Ações</th></tr>
+                    </thead>
+                    <tbody id="cursosTableBody"></tbody>
+                </table>
+                <button onclick="logout()" class="btn btn-danger w-100">Sair</button>
             </div>
         </div>
-    </section>
+    </div>
 </body>
 </html>
