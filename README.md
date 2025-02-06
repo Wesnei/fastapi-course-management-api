@@ -1,68 +1,69 @@
-# 👨🏻‍💻 Projeto FastAPI: API de Gerenciamento de Cursos com Autenticação JWT
 
-## 📄 Descrição do Projeto
-Esta API, desenvolvida utilizando **FastAPI**, oferece uma plataforma robusta e eficiente para gerenciar um catálogo de **cursos**, **alunos** e **professores**, além de suporte para autenticação de usuários com **JWT** (JSON Web Token).
+# 👨🏻‍💻 FastAPI Project: Course Management API with JWT Authentication
 
-A API permite realizar as seguintes operações:
+## 📄 Project Description
+This API, developed using **FastAPI**, offers a robust and efficient platform to manage a **catalog of courses**, along with support for user authentication using **JWT** (JSON Web Token).
 
-- **Cadastro e autenticação de usuários** (login com JWT).
-- Adicionar, listar, atualizar e excluir **cursos**.
-- Gerenciar dados de **alunos** e **professores**, incluindo adição, listagem, atualização e remoção.
+The API allows the following operations:
 
-## 🚀 Tecnologias Utilizadas
-- **Python 3.10+** - A linguagem de programação escolhida para o projeto.
-- **FastAPI** - Framework para criação de APIs rápidas e eficientes.
-- **Uvicorn** - Servidor ASGI para rodar a aplicação FastAPI.
-- **PostgreSQL** - Banco de dados relacional utilizado para armazenar os dados.
-- **Postman** - Ferramenta para testar as rotas da API durante o desenvolvimento.
-- **Docker** - Utilizado para containerizar a aplicação e o banco de dados.
-- **Jinja2** - Utilizado para criar templates na interface da API.
-- **JWT (JSON Web Tokens)** - Para autenticação de usuários.
+- **User registration and authentication** (login with JWT).
+- Add, list, update, and delete **courses**.
+- Manage data for **students** and **teachers**, including adding, listing, updating, and removing them.
 
-## 📦 Como Executar
+## 🚀 Technologies Used
+- **Python 3.10+** - The programming language used for the project.
+- **FastAPI** - A framework for creating fast and efficient APIs.
+- **Uvicorn** - ASGI server to run the FastAPI application.
+- **PostgreSQL** - Relational database used to store the data.
+- **Postman** - Tool for testing the API routes during development.
+- **Docker** - Used to containerize the application and database.
+- **Jinja2** - Used to create templates in the API interface.
+- **JWT (JSON Web Tokens)** - For user authentication.
 
-### Pré-requisitos
-Antes de rodar a API, é necessário garantir que você tenha os seguintes pré-requisitos instalados em sua máquina:
+## 📦 How to Run
 
-- **Docker** (para rodar os containers da aplicação e do banco de dados)
-- **Docker Compose** (para orquestrar os containers)
+### Prerequisites
+Before running the API, make sure you have the following prerequisites installed on your machine:
 
-Se preferir rodar localmente, você pode seguir as instruções para criar o ambiente Python manualmente.
+- **Docker** (to run the application and database containers)
+- **Docker Compose** (to orchestrate the containers)
 
-### 1. Criar e Ativar um Ambiente Virtual (venv)
-Se você for rodar a aplicação **sem Docker**, crie um ambiente virtual:
+If you prefer to run locally, you can follow the instructions to set up the Python environment manually.
+
+### 1. Create and Activate a Virtual Environment (venv)
+If you are running the application **without Docker**, create a virtual environment:
 
 ```bash
 python -m venv venv
 ```
 
-- **No Windows**:
+- **On Windows**:
 ```bash
 .\venv\Scripts\activate
 ```
 
-- **No macOS/Linux**:
+- **On macOS/Linux**:
 ```bash
 source venv/bin/activate
 ```
 
-### 2. Instalar as Dependências
-Com o ambiente virtual ativado, instale as dependências necessárias para o projeto:
+### 2. Install Dependencies
+With the virtual environment activated, install the required dependencies for the project:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configurar o Banco de Dados PostgreSQL
-Se você não estiver usando Docker para o banco de dados, certifique-se de ter o **PostgreSQL** instalado e funcionando. Crie um banco de dados e usuário com as permissões necessárias.
+### 3. Configure the PostgreSQL Database
+If you're not using Docker for the database, ensure you have **PostgreSQL** installed and running. Create a database and user with the necessary permissions.
 
 ---
 
-### 🐳 **Rodando o Projeto com Docker**
+### 🐳 **Running the Project with Docker**
 
-Se você deseja rodar a aplicação com **Docker**, siga as instruções abaixo.
+If you'd like to run the application with **Docker**, follow the steps below.
 
-### Passo 1: Criar Arquivos Docker
+### Step 1: Create Docker Files
 
 #### **Dockerfile**
 
@@ -117,25 +118,25 @@ volumes:
   postgres_data:
 ```
 
-### Passo 2: Rodar o Projeto
+### Step 2: Run the Project
 
-1. **Construir e Rodar os Containers**: Utilize o comando abaixo para construir as imagens e rodar os containers.
+1. **Build and Run the Containers**: Use the command below to build the images and run the containers.
 
 ```bash
 docker-compose up --build
 ```
 
-2. **Acessar a API**: Após os containers estarem rodando, a aplicação estará disponível em [http://localhost:8000](http://localhost:8000).
+2. **Access the API**: Once the containers are running, the application will be available at [http://localhost:8000](http://localhost:8000).
 
 ---
 
-## 🔐 **Autenticação JWT**
+## 🔐 **JWT Authentication**
 
-### Rota de Registro de Usuário
-Permite que novos usuários se registrem no sistema com um nome de usuário e senha. Após o registro, o usuário pode fazer login para obter um token JWT.
+### User Registration Route
+Allows new users to register in the system with a username and password. After registration, the user can log in to obtain a JWT token.
 
-- **POST /register** – Registrar um novo usuário.
-  - Corpo da requisição:
+- **POST /register** – Register a new user.
+  - Request body:
     ```json
     {
       "username": "example",
@@ -143,11 +144,11 @@ Permite que novos usuários se registrem no sistema com um nome de usuário e se
     }
     ```
 
-### Rota de Login
-O login permite ao usuário obter um **JWT** para autenticação em outras rotas da API.
+### Login Route
+The login allows the user to obtain a **JWT** for authentication on other API routes.
 
-- **POST /login** – Efetuar login para obter um token JWT.
-  - Corpo da requisição:
+- **POST /login** – Log in to get a JWT token.
+  - Request body:
     ```json
     {
       "username": "example",
@@ -155,13 +156,13 @@ O login permite ao usuário obter um **JWT** para autenticação em outras rotas
     }
     ```
 
-### Rota de Proteção com JWT
-A rota para manipulação de cursos, alunos e professores será protegida com a autenticação JWT. O token deve ser enviado no cabeçalho `Authorization` da requisição.
+### JWT Protected Routes
+The route to manage courses, students, and teachers will be protected with JWT authentication. The token must be sent in the `Authorization` header of the request.
 
-- **GET /cursos** – Listar todos os cursos cadastrados (requisição protegida).
-- **POST /cursos** – Adicionar um novo curso (requisição protegida).
+- **GET /cursos** – List all registered courses (protected route).
+- **POST /cursos** – Add a new course (protected route).
 
-Exemplo de cabeçalho para a requisição:
+Example of request header:
 
 ```bash
 Authorization: Bearer <JWT_TOKEN>
@@ -169,33 +170,32 @@ Authorization: Bearer <JWT_TOKEN>
 
 ---
 
-## 🚀 Como Testar as Rotas com Postman
+## 🚀 How to Test Routes with Postman
 
-Use o **Postman** ou qualquer outra ferramenta de API para testar as rotas da aplicação. Aqui estão as principais rotas disponíveis na API:
+Use **Postman** or any other API tool to test the routes of the application. Here are the main routes available in the API:
 
-### **Rotas de Autenticação**
-- **POST /register** – Registrar um novo usuário.
-- **POST /login** – Obter um token JWT.
+### **Authentication Routes**
+- **POST /register** – Register a new user.
+- **POST /login** – Obtain a JWT token.
 
-### **Rotas de Cursos (Protegidas por JWT)**
-- **GET /cursos** – Listar todos os cursos cadastrados.
-- **POST /cursos** – Adicionar um novo curso.
-- **PUT /cursos/{id}** – Atualizar um curso existente.
-- **DELETE /cursos/{id}** – Deletar um curso específico.
-
----
-
-## 📄 Contribuição
-Sinta-se à vontade para contribuir com melhorias ou correções. Para isso, siga os passos abaixo:
-
-1. Faça um **fork** do repositório.
-2. Crie uma nova **branch** (git checkout -b feature/nome-da-sua-feature).
-3. Faça suas alterações e realize o **commit** (git commit -m 'Adicionando nova feature').
-4. Envie para o repositório remoto (git push origin feature/nome-da-sua-feature).
-5. Abra um **Pull Request** para revisão e possível merge.
+### **Course Routes (Protected by JWT)**
+- **GET /cursos** – List all registered courses.
+- **POST /cursos** – Add a new course.
+- **PUT /cursos/{id}** – Update an existing course.
+- **DELETE /cursos/{id}** – Delete a specific course.
 
 ---
 
-## 📞 Contato
-Para dúvidas, sugestões ou contribuições, entre em contato através do e-mail: **wesneipaiva@gmail.com**
+## 📄 Contributing
+Feel free to contribute with improvements or fixes. To do so, follow the steps below:
 
+1. Fork the repository.
+2. Create a new branch (git checkout -b feature/your-feature-name).
+3. Make your changes and commit them (git commit -m 'Adding new feature').
+4. Push to the remote repository (git push origin feature/your-feature-name).
+5. Open a **Pull Request** for review and possible merge.
+
+---
+
+## 📞 Contact
+For questions, suggestions, or contributions, contact me via email: **wesneipaiva@gmail.com**
