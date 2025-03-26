@@ -1,201 +1,132 @@
+# API de Gerenciamento de Cursos
 
-# 👨🏻‍💻 FastAPI Project: Course Management API with JWT Authentication
+Uma API RESTful para gerenciamento de cursos e usuários, desenvolvida com FastAPI e seguindo as melhores práticas de desenvolvimento.
 
-## 📄 Project Description
-This API, developed using **FastAPI**, offers a robust and efficient platform to manage a **catalog of courses**, along with support for user authentication using **JWT** (JSON Web Token).
+## Características
 
-The API allows the following operations:
+- Autenticação e autorização de usuários
+- Gerenciamento completo de cursos (CRUD)
+- Validação de dados com Pydantic
+- Logging detalhado
+- Configuração via variáveis de ambiente
+- Documentação automática com Swagger UI
+- Testes unitários e de integração
+- Código organizado seguindo padrões de projeto
 
-- **User registration and authentication** (login with JWT).
-- Add, list, update, and delete **courses**.
-- Manage data for **students** and **teachers**, including adding, listing, updating, and removing them.
+## Tecnologias Utilizadas
 
-## 🚀 Technologies Used
-- **Python 3.10+** - The programming language used for the project.
-- **FastAPI** - A framework for creating fast and efficient APIs.
-- **Uvicorn** - ASGI server to run the FastAPI application.
-- **PostgreSQL** - Relational database used to store the data.
-- **Postman** - Tool for testing the API routes during development.
-- **Docker** - Used to containerize the application and database.
-- **Jinja2** - Used to create templates in the API interface.
-- **JWT (JSON Web Tokens)** - For user authentication.
+- Python 3.8+
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- Python-jose (JWT)
+- Passlib (hash de senhas)
+- Python-multipart
+- pytest (testes)
 
-## 📦 How to Run
+## Estrutura do Projeto
 
-### Prerequisites
-Before running the API, make sure you have the following prerequisites installed on your machine:
+```
+app/
+├── config/
+│   ├── logging_config.py
+│   └── settings.py
+├── models/
+│   ├── course_model.py
+│   └── user_model.py
+├── repositories/
+│   ├── course_repository.py
+│   └── user_repository.py
+├── routes/
+│   ├── auth.py
+│   └── courses.py
+├── schemas/
+│   ├── course_schema.py
+│   └── user_schema.py
+├── services/
+│   ├── course_service.py
+│   └── user_service.py
+├── static/
+│   ├── css/
+│   └── js/
+├── templates/
+├── utils/
+├── database.py
+└── main.py
+```
 
-- **Docker** (to run the application and database containers)
-- **Docker Compose** (to orchestrate the containers)
+## Instalação
 
-If you prefer to run locally, you can follow the instructions to set up the Python environment manually.
+1. Clone o repositório:
+```bash
+git clone https://github.com/seu-usuario/fastapi-course-management-api.git
+cd fastapi-course-management-api
+```
 
-### 1. Create and Activate a Virtual Environment (venv)
-If you are running the application **without Docker**, create a virtual environment:
-
+2. Crie um ambiente virtual e ative-o:
 ```bash
 python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
 ```
 
-- **On Windows**:
-```bash
-.\venv\Scripts\activate
-```
-
-- **On macOS/Linux**:
-```bash
-source venv/bin/activate
-```
-
-### 2. Install Dependencies
-With the virtual environment activated, install the required dependencies for the project:
-
+3. Instale as dependências:
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configure the PostgreSQL Database
-If you're not using Docker for the database, ensure you have **PostgreSQL** installed and running. Create a database and user with the necessary permissions.
-
----
-
-### 🐳 **Running the Project with Docker**
-
-If you'd like to run the application with **Docker**, follow the steps below.
-
-### Step 1: Create Docker Files
-
-#### **Dockerfile**
-
-```Dockerfile
-FROM python:3.12-slim
-
-WORKDIR /app
-
-COPY requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
-EXPOSE 8000
-
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-#### **docker-compose.yml**
-
-```yaml
-version: "3.9"
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: fastapi-app
-    ports:
-      - "8000:8000"
-    environment:
-      - DATABASE_URL=postgresql://postgres:password@db:5432/fastAPI
-    depends_on:
-      - db
-    volumes:
-      - .:/app
-
-  db:
-    image: postgres:17
-    container_name: postgres-db
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: fastAPI
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-volumes:
-  postgres_data:
-```
-
-### Step 2: Run the Project
-
-1. **Build and Run the Containers**: Use the command below to build the images and run the containers.
-
+4. Copie o arquivo de exemplo de variáveis de ambiente:
 ```bash
-docker-compose up --build
+cp .env.example .env
 ```
 
-2. **Access the API**: Once the containers are running, the application will be available at [http://localhost:8000](http://localhost:8000).
+5. Configure as variáveis de ambiente no arquivo `.env`
 
----
+## Executando a Aplicação
 
-## 🔐 **JWT Authentication**
-
-### User Registration Route
-Allows new users to register in the system with a username and password. After registration, the user can log in to obtain a JWT token.
-
-- **POST /register** – Register a new user.
-  - Request body:
-    ```json
-    {
-      "username": "example",
-      "password": "password123"
-    }
-    ```
-
-### Login Route
-The login allows the user to obtain a **JWT** for authentication on other API routes.
-
-- **POST /login** – Log in to get a JWT token.
-  - Request body:
-    ```json
-    {
-      "username": "example",
-      "password": "password123"
-    }
-    ```
-
-### JWT Protected Routes
-The route to manage courses, students, and teachers will be protected with JWT authentication. The token must be sent in the `Authorization` header of the request.
-
-- **GET /cursos** – List all registered courses (protected route).
-- **POST /cursos** – Add a new course (protected route).
-
-Example of request header:
-
+1. Inicie o servidor:
 ```bash
-Authorization: Bearer <JWT_TOKEN>
+uvicorn app.main:app --reload
 ```
 
----
+2. Acesse a documentação da API:
+- Swagger UI: http://localhost:8000/docs
+- ReDoc: http://localhost:8000/redoc
 
-## 🚀 How to Test Routes with Postman
+## Endpoints
 
-Use **Postman** or any other API tool to test the routes of the application. Here are the main routes available in the API:
+### Autenticação
+- POST `/api/auth/login` - Login de usuário
+- POST `/api/auth/register` - Registro de novo usuário
 
-### **Authentication Routes**
-- **POST /register** – Register a new user.
-- **POST /login** – Obtain a JWT token.
+### Cursos
+- GET `/api/cursos/` - Lista todos os cursos
+- POST `/api/cursos/` - Cria um novo curso
+- GET `/api/cursos/{curso_id}` - Obtém um curso específico
+- PUT `/api/cursos/{curso_id}` - Atualiza um curso
+- DELETE `/api/cursos/{curso_id}` - Remove um curso
 
-### **Course Routes (Protected by JWT)**
-- **GET /cursos** – List all registered courses.
-- **POST /cursos** – Add a new course.
-- **PUT /cursos/{id}** – Update an existing course.
-- **DELETE /cursos/{id}** – Delete a specific course.
+## Testes
 
----
+Execute os testes com:
+```bash
+pytest
+```
 
-## 📄 Contributing
-Feel free to contribute with improvements or fixes. To do so, follow the steps below:
+## Contribuindo
 
-1. Fork the repository.
-2. Create a new branch (git checkout -b feature/your-feature-name).
-3. Make your changes and commit them (git commit -m 'Adding new feature').
-4. Push to the remote repository (git push origin feature/your-feature-name).
-5. Open a **Pull Request** for review and possible merge.
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
----
+## Licença
 
-## 📞 Contact
-For questions, suggestions, or contributions, contact me via email: **wesneipaiva@gmail.com**
+Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+
+## Contato
+
+Seu Nome - [@seu_twitter](https://twitter.com/seu_twitter) - email@exemplo.com
+
+Link do Projeto: [https://github.com/seu-usuario/fastapi-course-management-api](https://github.com/seu-usuario/fastapi-course-management-api)

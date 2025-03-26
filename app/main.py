@@ -1,65 +1,182 @@
-from fastapi import FastAPI, Depends, HTTPException
-from fastapi.templating import Jinja2Templates
+from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
-from app import crud, schemas
-from app.database import get_db
-from starlette.requests import Request
-from app.models import Base
-from app.database import engine
-from app.routes import courses
-from app.routes import auth
-from app.routes import register
+import logging
+import os
+from app.routes import courses, auth, students, enrollments
+from app.database import get_db, init_db
+from app.config.logging_config import setup_logging
+from app.config.settings import settings
+from app.models.course_model import Curso
 
-Base.metadata.create_all(bind=engine)
+# Configuração do logging
+logger = setup_logging()
 
-app = FastAPI(debug=True)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  
-    allow_credentials=True,
-    allow_methods=["*"],  
-    allow_headers=["*"],  
+# Cria a aplicação FastAPI
+app = FastAPI(
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    debug=settings.DEBUG
 )
 
-app.include_router(courses.router, prefix="/cursos", tags=["Cursos"])
-app.include_router(auth.router, prefix="/auth", tags=["Auth"])
-app.include_router(register.router, prefix="/register", tags=["Register"])
-# app.include_router(user.router, prefix="/user", tags=["User"])
+# Configuração do CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.CORS_ORIGINS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+# Monta os arquivos estáticos
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
-    
-@app.get("/")
-async def read_root(request: Request, db: Session = Depends(get_db)):
-    try:
-        cursos = crud.get_items(db)
-        return templates.TemplateResponse("login.html", {"request": request, "todo_list": cursos})
-    except Exception as e:
-        return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "todo_list": [], "error": "Erro ao buscar cursos."}
-        )
 
-@app.get("/home")
-async def read_root(request: Request, db: Session = Depends(get_db)):
+# Inclui as rotas
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(courses.router, prefix="/cursos", tags=["cursos"])
+app.include_router(students.router, prefix="/alunos", tags=["alunos"])
+app.include_router(enrollments.router, prefix="/matriculas", tags=["matriculas"])
+
+@app.on_event("startup")
+async def startup_event():
+    """
+    Evento executado quando a aplicação inicia.
+    """
     try:
-        cursos = crud.get_items(db)
-        return templates.TemplateResponse("index.html", {"request": request, "todo_list": cursos})
+        logger.info(f"Iniciando aplicação {settings.APP_NAME} v{settings.APP_VERSION}")
+        # Inicializa o banco de dados
+        init_db()
+        logger.info("Aplicação iniciada com sucesso")
     except Exception as e:
+        logger.error(f"Erro ao iniciar aplicação: {str(e)}", exc_info=True)
+        raise
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """
+    Evento executado quando a aplicação é encerrada.
+    """
+    try:
+        logger.info("Encerrando aplicação")
+        logger.info("Aplicação encerrada com sucesso")
+    except Exception as e:
+        logger.error(f"Erro ao encerrar aplicação: {str(e)}", exc_info=True)
+        raise
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """
+    Manipulador de exceções para erros de validação.
+    """
+    logger.error(f"Erro de validação: {str(exc)}")
+    return JSONResponse(
+        status_code=422,
+        content={"detail": exc.errors()}
+    )
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    """
+    Manipulador de exceções para erros gerais.
+    """
+    logger.error(f"Erro não tratado: {str(exc)}", exc_info=True)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "Erro interno do servidor"}
+    )
+
+@app.get("/")
+async def root():
+    """
+    Rota raiz que redireciona para a página de login.
+    """
+    return RedirectResponse(url="/login")
+
+@app.get("/login")
+async def read_login(request: Request, db: Session = Depends(get_db)):
+    """
+    Rota para exibir a página de login.
+    """
+    try:
+        return templates.TemplateResponse("login.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Erro ao renderizar página de login: {str(e)}")
         return templates.TemplateResponse(
-            "index.html",
-            {"request": request, "todo_list": [], "error": "Erro ao buscar cursos."}
+            "login.html",
+            {"request": request, "error": "Erro ao carregar página de login."}
         )
 
 @app.get("/register")
-async def read_root(request: Request, db: Session = Depends(get_db)):
+async def read_register(request: Request):
+    """
+    Rota para exibir a página de registro.
+    """
     try:
-        cursos = crud.get_items(db)
-        return templates.TemplateResponse("register.html", {"request": request, "todo_list": cursos})
+        return templates.TemplateResponse("register.html", {"request": request})
     except Exception as e:
+        logger.error(f"Erro ao renderizar página de registro: {str(e)}")
+        return templates.TemplateResponse(
+            "register.html",
+            {"request": request, "error": "Erro ao carregar página de registro."}
+        )
+
+@app.get("/password-recovery")
+async def read_password_recovery(request: Request):
+    """
+    Rota para exibir a página de recuperação de senha.
+    """
+    try:
+        return templates.TemplateResponse("password_recovery.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Erro ao renderizar página de recuperação de senha: {str(e)}")
+        return templates.TemplateResponse(
+            "password_recovery.html",
+            {"request": request, "error": "Erro ao carregar página de recuperação de senha."}
+        )
+
+@app.get("/reset-password")
+async def read_reset_password(request: Request):
+    """
+    Rota para exibir a página de redefinição de senha.
+    """
+    try:
+        return templates.TemplateResponse("reset_password.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Erro ao renderizar página de redefinição de senha: {str(e)}")
+        return templates.TemplateResponse(
+            "reset_password.html",
+            {"request": request, "error": "Erro ao carregar página de redefinição de senha."}
+        )
+
+@app.get("/home")
+async def read_dashboard(request: Request, db: Session = Depends(get_db)):
+    """
+    Rota para exibir o dashboard após o login.
+    """
+    try:
+        return templates.TemplateResponse("index.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Erro ao renderizar página home: {str(e)}")
         return templates.TemplateResponse(
             "index.html",
-            {"request": request, "todo_list": [], "error": "Erro ao buscar cursos."}
-        )    
+            {"request": request, "error": "Erro ao carregar home."}
+        )
 
+@app.get("/cursos")
+async def read_courses(request: Request, db: Session = Depends(get_db)):
+    """
+    Rota para exibir a página de cursos.
+    """
+    try:
+        return templates.TemplateResponse("courses.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Erro ao renderizar cursos: {str(e)}")
+        return templates.TemplateResponse(
+            "courses.html",
+            {"request": request, "error": "Erro ao carregar cursos."}
+        )

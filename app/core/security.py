@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
-from passlib.context import CryptContext
+from jose import JWTError, jwt # type: ignore
+from passlib.context import CryptContext # type: ignore
 from fastapi import HTTPException
 
 SECRET_KEY = "byfebyuiewfvy8fv38vfy3vhfouqfvq"
