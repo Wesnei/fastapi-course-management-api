@@ -1,132 +1,183 @@
-# API de Gerenciamento de Cursos
+# 🎓 FastAPI Educational Management System
 
-Uma API RESTful para gerenciamento de cursos e usuários, desenvolvida com FastAPI e seguindo as melhores práticas de desenvolvimento.
+## 📌 Project Overview
 
-## Características
+This **FastAPI-based educational platform** provides a complete solution for managing courses, students, teachers, and enrollments with robust JWT authentication. The system features a clean architecture following repository pattern and modern Python practices.
 
-- Autenticação e autorização de usuários
-- Gerenciamento completo de cursos (CRUD)
-- Validação de dados com Pydantic
-- Logging detalhado
-- Configuração via variáveis de ambiente
-- Documentação automática com Swagger UI
-- Testes unitários e de integração
-- Código organizado seguindo padrões de projeto
+## 🌟 Key Features
 
-## Tecnologias Utilizadas
+- **JWT Authentication**: Secure user registration/login system with password recovery
+- **Comprehensive CRUD Operations**:
+  - Courses management
+  - Students system (student_id based)
+  - Enrollment tracking
+- **Production-ready architecture** with Docker support
+- **Automated testing** infrastructure
+- **Swagger UI** for interactive API documentation
 
-- Python 3.8+
-- FastAPI
-- SQLAlchemy
-- Pydantic
-- Python-jose (JWT)
-- Passlib (hash de senhas)
-- Python-multipart
-- pytest (testes)
-
-## Estrutura do Projeto
+## 🏗️ Project Structure
 
 ```
-app/
-├── config/
-│   ├── logging_config.py
-│   └── settings.py
-├── models/
-│   ├── course_model.py
-│   └── user_model.py
-├── repositories/
-│   ├── course_repository.py
-│   └── user_repository.py
-├── routes/
-│   ├── auth.py
-│   └── courses.py
-├── schemas/
-│   ├── course_schema.py
-│   └── user_schema.py
-├── services/
-│   ├── course_service.py
-│   └── user_service.py
-├── static/
-│   ├── css/
-│   └── js/
-├── templates/
-├── utils/
-├── database.py
-└── main.py
+.
+├── app/
+│   ├── config/               # Configuration files
+│   ├── core/                 # Core utilities and middleware
+│   ├── database/             # Database connection and setup
+│   ├── models/               # SQLAlchemy data models
+│   ├── repositories/         # Data access layer
+│   ├── routes/               # API endpoints
+│   │   ├── auth.py           # Authentication routes
+│   │   ├── cursos.py         # Course management
+│   │   ├── alunos.py         # Student operations
+│   │   └── matriculas.py     # Enrollment system
+│   ├── schemas/              # Pydantic validation schemas
+│   ├── services/             # Business logic layer
+│   ├── static/               # Static files
+│   └── utils/                # Helper functions
+├── tests/                    # Test suite
+├── .env                      # Environment variables
+├── docker-compose.yml        # Docker orchestration
+├── Dockerfile                # Docker configuration
+└── README.md                 # Project documentation
 ```
 
-## Instalação
+## 🛠️ Technology Stack
 
-1. Clone o repositório:
+- **Python 3.10+** with FastAPI framework
+- **SQLAlchemy** ORM with PostgreSQL/SQLite
+- **JWT** for secure authentication
+- **Pydantic** for data validation
+- **Docker** for containerization
+- **Swagger UI** for interactive documentation
+
+## 🚀 Quick Start
+
+### With Docker (Recommended)
+
 ```bash
-git clone https://github.com/seu-usuario/fastapi-course-management-api.git
-cd fastapi-course-management-api
+docker-compose up --build
 ```
 
-2. Crie um ambiente virtual e ative-o:
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-```
+Access the API at `http://localhost:8000` and interactive docs at `http://localhost:8000/docs`
 
-3. Instale as dependências:
-```bash
-pip install -r requirements.txt
-```
+### Local Development
 
-4. Copie o arquivo de exemplo de variáveis de ambiente:
-```bash
-cp .env.example .env
-```
+1. Create and activate virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   .\venv\Scripts\activate   # Windows
+   ```
 
-5. Configure as variáveis de ambiente no arquivo `.env`
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Executando a Aplicação
+3. Configure environment:
+   ```bash
+   cp .env.example .env
+   ```
 
-1. Inicie o servidor:
-```bash
-uvicorn app.main:app --reload
-```
+4. Run application:
+   ```bash
+   uvicorn main:app --reload
+   ```
 
-2. Acesse a documentação da API:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+## 🔐 Authentication Endpoints
 
-## Endpoints
+| Endpoint                 | Method | Description                  | Request Body Example               |
+|--------------------------|--------|------------------------------|------------------------------------|
+| `/auth/register`         | POST   | User registration            | `{"username":"user1","password":"pass123","email":"user@example.com"}` |
+| `/auth/token`            | POST   | Login to get JWT             | `{"username":"user1","password":"pass123"}` |
+| `/auth/password-recovery`| POST   | Initiate password recovery   | `{"email":"user@example.com"}` |
+| `/auth/reset-password`   | POST   | Reset password               | `{"token":"...","new_password":"newpass123"}` |
 
-### Autenticação
-- POST `/api/auth/login` - Login de usuário
-- POST `/api/auth/register` - Registro de novo usuário
+## 📚 Course Management
 
-### Cursos
-- GET `/api/cursos/` - Lista todos os cursos
-- POST `/api/cursos/` - Cria um novo curso
-- GET `/api/cursos/{curso_id}` - Obtém um curso específico
-- PUT `/api/cursos/{curso_id}` - Atualiza um curso
-- DELETE `/api/cursos/{curso_id}` - Remove um curso
+| Endpoint              | Method | Description                  | Protected |
+|-----------------------|--------|------------------------------|-----------|
+| `/cursos/`            | GET    | List all courses             | No        |
+| `/cursos/`            | POST   | Create new course            | Yes       |
+| `/cursos/{course_id}` | GET    | Get course details           | No        |
+| `/cursos/{course_id}` | PUT    | Update course                | Yes       |
+| `/cursos/{course_id}` | DELETE | Delete course                | Yes       |
 
-## Testes
+## 👨‍🎓 Student Management
 
-Execute os testes com:
-```bash
-pytest
-```
+| Endpoint               | Method | Description                  | Protected |
+|------------------------|--------|------------------------------|-----------|
+| `/alunos/`             | GET    | List all students            | Yes       |
+| `/alunos/`             | POST   | Create new student           | Yes       |
+| `/alunos/{student_id}` | GET    | Get student details          | Yes       |
+| `/alunos/{student_id}` | PUT    | Update student               | Yes       |
+| `/alunos/{student_id}` | DELETE | Delete student               | Yes       |
 
-## Contribuindo
+## 📝 Enrollment System
 
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
+| Endpoint                   | Method | Description                  | Protected |
+|----------------------------|--------|------------------------------|-----------|
+| `/matriculas/`             | GET    | List all enrollments         | Yes       |
+| `/matriculas/`             | POST   | Create new enrollment        | Yes       |
+| `/matriculas/{enrollment_id}` | GET | Get enrollment details   | Yes       |
+| `/matriculas/{enrollment_id}` | PUT | Update enrollment        | Yes       |
 
-## Licença
+## 🧪 Testing the API
 
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para detalhes.
+1. First register a user:
+   ```http
+   POST /auth/register
+   Content-Type: application/json
 
-## Contato
+   {
+     "username": "testuser",
+     "password": "testpass123",
+     "email": "test@example.com"
+   }
+   ```
 
-Seu Nome - [@seu_twitter](https://twitter.com/seu_twitter) - email@exemplo.com
+2. Login to get JWT token:
+   ```http
+   POST /auth/token
+   Content-Type: application/json
 
-Link do Projeto: [https://github.com/seu-usuario/fastapi-course-management-api](https://github.com/seu-usuario/fastapi-course-management-api)
+   {
+     "username": "testuser",
+     "password": "testpass123"
+   }
+   ```
+
+3. Use the token in Authorization header:
+   ```
+   Authorization: Bearer <your_jwt_token>
+   ```
+
+4. Test protected endpoints like creating a course:
+   ```http
+   POST /cursos/
+   Authorization: Bearer <your_jwt_token>
+   Content-Type: application/json
+
+   {
+     "title": "Advanced Python",
+     "description": "Deep dive into Python",
+     "duration": 40
+   }
+   ```
+
+## 🤝 Contributing
+
+We welcome contributions! Please follow these steps:
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📞 Contact
+
+For questions or support, please contact:  
+**Wesnei Paiva**  
+📧 [wesneipaiva@gmail.com](mailto:wesneipaiva@gmail.com)  
+🔗 [API Documentation](http://localhost:8000/docs) (when running locally)
