@@ -7,6 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 import logging
 import os
+from app.routes import students
 from app.routes import courses, auth, students, enrollments
 from app.database import get_db, init_db
 from app.config.logging_config import setup_logging
@@ -39,7 +40,7 @@ templates = Jinja2Templates(directory="app/templates")
 # Inclui as rotas
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(courses.router, prefix="/cursos", tags=["cursos"])
-app.include_router(students.router, prefix="/alunos", tags=["alunos"])
+app.include_router(students.router, tags=["alunos"])  # Remova o prefix aqui
 app.include_router(enrollments.router, prefix="/matriculas", tags=["matriculas"])
 
 @app.on_event("startup")
@@ -179,4 +180,19 @@ async def read_courses(request: Request, db: Session = Depends(get_db)):
         return templates.TemplateResponse(
             "courses.html",
             {"request": request, "error": "Erro ao carregar cursos."}
+        )
+    
+    # ... existing code ...
+@app.get("/alunos")
+async def read_students(request: Request, db: Session = Depends(get_db)):
+    """
+    Rota para exibir a página de gerenciamento de alunos.
+    """
+    try:
+        return templates.TemplateResponse("students.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Erro ao renderizar página de alunos: {str(e)}")
+        return templates.TemplateResponse(
+            "students.html",
+            {"request": request, "error": "Erro ao carregar página de alunos."}
         )

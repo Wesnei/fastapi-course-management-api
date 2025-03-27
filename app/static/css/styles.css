@@ -1,24 +1,41 @@
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3a0ca3;
+    --accent-color: #4895ef;
+    --dark-color: #2b2d42;
+    --light-color: #f8f9fa;
+    --success-color: #4cc9f0;
+    --danger-color: #f72585;
+    --warning-color: #f8961e;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #f8fafc;
+    color: #2d3748;
     margin: 0;
     padding: 0;
-    color: #333;
-    background-color: #f9f9f9;
 }
 
-header {
-    background-color: #2c3e50;
-    color: white;
-    padding: 15px 0;
-}
-
+/* Navbar Estilizado */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
+    padding: 15px 90px;
+    background-color: #2c3e50;
+    color: white;
+    box-sizing: border-box; /* Importante para o padding não somar à largura */
+}
+
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
-    padding: 0 20px;
 }
 
 .logo {
@@ -36,8 +53,34 @@ nav a {
     text-decoration: none;
     margin: 0 15px;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
 }
 
+nav a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+nav a i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* Estilo específico para o botão Sair */
+nav a.logout-btn {
+    color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+nav a.logout-btn:hover {
+    color: white !important;
+    background-color: #dc3545;
+}
+
+/* Hero Section */
 .hero {
     text-align: center;
     padding: 100px 20px;
@@ -101,7 +144,7 @@ nav a {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-/* Seção Porquê */
+/* Why Section */
 .why-section {
     padding: 80px 20px;
     max-width: 1200px;
@@ -157,7 +200,7 @@ nav a {
     line-height: 1.6;
 }
 
-/* Seção Software de Gestão */
+/* Software Section */
 .software-section {
     display: flex;
     align-items: center;
@@ -253,7 +296,7 @@ nav a {
     max-width: 100%;
 }
 
-/* Seção Produtividade */
+/* Productivity Section */
 .productivity-section {
     display: flex;
     max-width: 1200px;
@@ -281,8 +324,8 @@ nav a {
     margin-bottom: 30px;
 }
 
-
 .productivity-list {
+ 
     list-style: none;
     padding: 0;
     margin: 0;
@@ -303,29 +346,12 @@ nav a {
     min-width: 25px;
 }
 
-@media (max-width: 768px) {
-    .software-section {
-        flex-direction: column;
-    }
-    
-    .software-image {
-        order: -1;
-        margin-bottom: 30px;
-    }
-    
-    .productivity-section {
-        flex-direction: column;
-    }
-    
-    .productivity-image {
-        margin-bottom: 30px;
-    }
-}
-
+/* EAD Section */
 .ead-section {
     display: flex;
     max-width: 1200px;
     padding: 0 20px;
+    margin: 80px auto;
     align-items: center;
     gap: 50px;
 }
@@ -392,21 +418,7 @@ nav a {
     line-height: 1.5;
 }
 
-@media (max-width: 768px) {
-    .ead-section {
-        flex-direction: column;
-    }
-    
-    .ead-image {
-        order: -1;
-        margin-bottom: 30px;
-    }
-    
-    .ead-content h2 {
-        font-size: 28px;
-    }
-} 
-/* Footer ajustado */
+/* Footer */
 footer {
     background-color: #2c3e50;
     color: white;
@@ -528,24 +540,7 @@ footer {
     transform: translateY(-3px);
 }
 
-
-/* Responsivo */
-@media (max-width: 768px) {
-    .footer-main {
-        grid-template-columns: 1fr 1fr;
-    }
-}
-
-@media (max-width: 480px) {
-    .footer-main {
-        grid-template-columns: 1fr;
-    }
-    
-    .footer-bottom {
-        flex-direction: column;
-    }
-}
-/* Botão do WhatsApp flutuante */
+/* WhatsApp Float */
 .whatsapp-float {
     position: fixed;
     bottom: 30px;
@@ -570,3 +565,70 @@ footer {
     transform: scale(1.1);
 }
 
+/* Responsividade */
+@media (max-width: 768px) {
+    .software-section {
+        flex-direction: column;
+    }
+    
+    .software-image {
+        order: -1;
+        margin-bottom: 30px;
+    }
+    
+    .productivity-section {
+        flex-direction: column;
+    }
+    
+    .productivity-image {
+        margin-bottom: 30px;
+    }
+
+    .ead-section {
+        flex-direction: column;
+    }
+    
+    .ead-image {
+        order: -1;
+        margin-bottom: 30px;
+    }
+    
+    .navbar-brand-curso span {
+        display: none;
+    }
+
+    .footer-main {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+    }
+
+    .hero p {
+        font-size: 18px;
+    }
+
+    .cta-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+}

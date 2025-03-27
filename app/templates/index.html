@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CursoPro - Gestão Educacional</title>
-    <link rel="stylesheet" href="../static/css/styles.css">
-    <!-- Ícone do Font Awesome para o WhatsApp -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Biblioteca AOS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-  </head>
-  <body>
-
+    <link rel="stylesheet" href="../static/css/styles.css">
+</head>
+<body>
     <header>
         <div class="navbar">
             <div class="logo">CursoPro</div>
             <nav>
-                <a href="#">Início</a>
-                <a href="/cursos">Cursos</a>
-                <a href="#">Alunos</a>
-                <a href="#">Relatórios</a>
+                <a href="/home"><i class="fas fa-home"></i> Início</a>
+                <a href="/cursos"><i class="fas fa-book"></i> Cursos</a>
+                <a href="/alunos" class="active"><i class="fas fa-users"></i> Alunos</a>
+                <a href="#"><i class="fas fa-clipboard-list"></i> Relatórios</a>
                 <a href="/" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Sair</a>
-
             </nav>
         </div>
     </header>
 
     <main>
+        <!-- Hero Section -->
         <section class="hero" data-aos="fade-up">
             <h1>Sistema de Gestão para Cursos e Treinamentos</h1>
             <p>Versões Acadêmica, Financeira e Administrativa. Tudo que você precisa para gerenciar sua instituição de ensino em um único lugar.</p>
@@ -77,7 +76,7 @@
                 
                 <div class="action-buttons">
                     <a href="cursos" class="action-btn primary-btn"><i class="fas fa-plus-circle"></i> Cadastrar Cursos</a>
-                    <a href="#" class="action-btn secondary-btn"><i class="fas fa-user-plus"></i> Cadastrar Alunos</a>
+                    <a href="alunos" class="action-btn secondary-btn"><i class="fas fa-user-plus"></i> Cadastrar Alunos</a>
                     <a href="#" class="action-btn tertiary-btn"><i class="fas fa-edit"></i> Lançar Notas</a>
                 </div>
             </div>
@@ -123,7 +122,7 @@
             </div>
         </section>
 
-        <!-- Adicione esta seção antes do footer -->
+        <!-- Seção EAD -->
         <section class="ead-section" data-aos="fade-up">
             <div class="ead-image">
                 <img src="../static/assets/cursopro4.png" alt="Ferramentas de EAD">
@@ -166,70 +165,87 @@
                 </div>
             </div>
         </section>
-
     </main>
 
+    <!-- Footer -->
     <footer>
-      <div class="footer-content">
-          <div class="footer-main">
-              <div class="footer-column">
-                  <div class="footer-logo">CursoPro</div>
-                  <p class="footer-description">
-                      Soluções completas em gestão educacional para instituições de ensino de todos os portes.
-                  </p>
-                  <div class="social-links">
-                      <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                      <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                      <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                      <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                  </div>
-              </div>
-
-              <div class="footer-column">
-                  <h3>Institucional</h3>
-                  <ul class="footer-links">
-                      <li><a href="#">Sobre Nós</a></li>
-                      <li><a href="#">Nossa História</a></li>
-                      <li><a href="#">Equipe</a></li>
-                      <li><a href="#">Trabalhe Conosco</a></li>
-                      <li><a href="#">Parceiros</a></li>
-                  </ul>
-              </div>
-
-              <div class="footer-column">
-                  <h3>Produtos</h3>
-                  <ul class="footer-links">
-                      <li><a href="#">Sistema Acadêmico</a></li>
-                      <li><a href="#">Gestão Financeira</a></li>
-                      <li><a href="#">Portal do Aluno</a></li>
-                      <li><a href="#">Ambiente Virtual</a></li>
-                      <li><a href="#">Soluções Personalizadas</a></li>
-                  </ul>
-              </div>
-
-              <div class="footer-column">
-                  <h3>Contato</h3>
-                  <ul class="contact-info">
-                      <li><i class="fas fa-map-marker-alt"></i> Av. das Universidades, 1500 - São Paulo/SP</li>
-                      <li><i class="fas fa-phone"></i> (11) 4002-8922</li>
-                      <li><i class="fas fa-envelope"></i> contato@cursopro.com.br</li>
-                      <li><i class="fab fa-whatsapp"></i> (11) 98765-4321</li>
-                  </ul>
-              </div>
-          </div>
-      </div>
-  </footer>
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-column">
+                    <div class="footer-logo">CursoPro</div>
+                    <p class="footer-description">
+                        Plataforma de gestão educacional que simplifica a administração de cursos,
+                        alunos e matrículas, proporcionando uma experiência completa para instituições de ensino.
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Links Rápidos</h3>
+                    <ul class="footer-links">
+                        <li><a href="/home"><i class="fas fa-chevron-right me-2"></i>Início</a></li>
+                        <li><a href="/cursos"><i class="fas fa-chevron-right me-2"></i>Cursos</a></li>
+                        <li><a href="/alunos"><i class="fas fa-chevron-right me-2"></i>Alunos</a></li>
+                        <li><a href="/matriculas"><i class="fas fa-chevron-right me-2"></i>Matrículas</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-right me-2"></i>Sobre Nós</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contato</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Av. Paulista, 1000 - São Paulo, SP</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-phone-alt"></i>
+                            <span>(11) 1234-5678</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-envelope"></i>
+                            <span>contato@cursopro.com.br</span>
+                        </li>
+                        <li>
+                            <i class="fas fa-clock"></i>
+                            <span>Seg-Sex: 9:00 - 18:00</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p class="footer-description">
+                        Assine nossa newsletter para receber atualizações e novidades sobre a plataforma.
+                    </p>
+                    <form class="d-flex">
+                        <input type="email" class="form-control me-2" placeholder="Seu e-mail">
+                        <button class="btn btn-primary" type="submit">Assinar</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="text-center pt-4 border-top border-secondary">
+                <p class="mb-0">&copy; 2025 CursoPro. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- Botão do WhatsApp flutuante -->
     <a href="https://wa.me/5588988155616" target="_blank" class="whatsapp-float">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <!-- Script AOS -->
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     <script>
         AOS.init();
     </script>
-
-  </body>
+</body>
 </html>

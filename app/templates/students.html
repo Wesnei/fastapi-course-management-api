@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Gestão de Cursos | CursoPro</title>
+    <title>Gestão de Alunos | CursoPro</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -174,6 +174,11 @@
         color: var(--success-color);
       }
 
+      .badge-inactive {
+        background-color: rgba(247, 37, 133, 0.1);
+        color: var(--danger-color);
+      }
+
       /* Formulários */
       .form-control-curso {
         border-radius: 8px;
@@ -185,6 +190,20 @@
       .form-control-curso:focus {
         border-color: var(--accent-color);
         box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+      }
+
+      /* Avatar */
+      .avatar-curso {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        background-color: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--dark-color);
+        font-weight: 600;
       }
 
       /* Alertas */
@@ -368,12 +387,12 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-link-curso active" href="/cursos">
+              <a class="nav-link nav-link-curso" href="/cursos">
                 <i class="fas fa-book me-1"></i> Cursos
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link nav-link-curso" href="/alunos">
+              <a class="nav-link nav-link-curso active" href="/alunos">
                 <i class="fas fa-users me-1"></i> Alunos
               </a>
             </li>
@@ -402,16 +421,16 @@
         <div class="row mb-4">
           <div class="col-md-6">
             <h2 class="fw-bold mb-0">
-              <i class="fas fa-book me-2"></i> Gerenciamento de Cursos
+              <i class="fas fa-users me-2"></i> Gerenciamento de Alunos
             </h2>
           </div>
           <div class="col-md-6 text-end">
             <button
               class="btn btn-curso-primary"
               data-bs-toggle="modal"
-              data-bs-target="#addCourseModal"
+              data-bs-target="#addStudentModal"
             >
-              <i class="fas fa-plus me-2"></i> Novo Curso
+              <i class="fas fa-plus me-2"></i> Novo Aluno
             </button>
           </div>
         </div>
@@ -421,9 +440,9 @@
           <div
             class="card-header card-header-curso d-flex justify-content-between align-items-center"
           >
-            <h5 class="mb-0">Lista de Cursos</h5>
+            <h5 class="mb-0">Lista de Alunos</h5>
             <div class="text-muted small">
-              Total: <span id="totalCourses" class="fw-bold">0</span> cursos
+              Total: <span id="totalStudents" class="fw-bold">0</span> alunos
             </div>
           </div>
           <div class="card-body p-0">
@@ -431,13 +450,15 @@
               <table class="table table-curso table-hover mb-0">
                 <thead>
                   <tr>
-                    <th>Nome</th>
-                    <th>Descrição</th>
-                    <th>Duração (Anos)</th>
+                    <th width="50px">#</th>
+                    <th>Aluno</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                    <th>Status</th>
                     <th width="120px">Ações</th>
                   </tr>
                 </thead>
-                <tbody id="coursesTable">
+                <tbody id="studentsTable">
                   <!-- Dados serão carregados via JavaScript -->
                 </tbody>
               </table>
@@ -529,17 +550,17 @@
       </div>
     </footer>
 
-    <!-- Modal Adicionar Curso -->
+    <!-- Modal Adicionar Aluno -->
     <div
       class="modal fade"
-      id="addCourseModal"
+      id="addStudentModal"
       tabindex="-1"
       aria-hidden="true"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Adicionar Novo Curso</h5>
+            <h5 class="modal-title">Adicionar Novo Aluno</h5>
             <button
               type="button"
               class="btn-close"
@@ -548,33 +569,66 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form id="courseForm">
-              <div class="mb-3">
-                <label class="form-label">Nome do Curso *</label>
-                <input
-                  type="text"
-                  class="form-control form-control-curso"
-                  id="courseName"
-                  required
-                />
+            <form id="studentForm">
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Nome Completo *</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-curso"
+                    id="studentName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">E-mail *</label>
+                  <input
+                    type="email"
+                    class="form-control form-control-curso"
+                    id="studentEmail"
+                    required
+                  />
+                </div>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Descrição</label>
-                <textarea
-                  class="form-control form-control-curso"
-                  id="courseDescription"
-                  rows="3"
-                ></textarea>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Telefone</label>
+                  <input
+                    type="tel"
+                    class="form-control form-control-curso"
+                    id="studentPhone"
+                    placeholder="(00) 00000-0000"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Data de Nascimento</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-curso"
+                    id="studentBirthDate"
+                  />
+                </div>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Duração (Anos) *</label>
-                <input
-                  type="number"
-                  class="form-control form-control-curso"
-                  id="courseDuration"
-                  required
-                  min="1"
-                />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">CPF</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-curso"
+                    id="studentCpf"
+                    placeholder="000.000.000-00"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Status</label>
+                  <select
+                    class="form-select form-control-curso"
+                    id="studentStatus"
+                  >
+                    <option value="active" selected>Ativo</option>
+                    <option value="inactive">Inativo</option>
+                  </select>
+                </div>
               </div>
             </form>
           </div>
@@ -589,26 +643,26 @@
             <button
               type="button"
               class="btn btn-primary btn-curso-primary"
-              id="saveCourseBtn"
+              id="saveStudentBtn"
             >
-              Salvar Curso
+              Salvar Aluno
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Modal Editar Curso -->
+    <!-- Modal Editar Aluno -->
     <div
       class="modal fade"
-      id="editCourseModal"
+      id="editStudentModal"
       tabindex="-1"
       aria-hidden="true"
     >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Editar Curso</h5>
+            <h5 class="modal-title">Editar Aluno</h5>
             <button
               type="button"
               class="btn-close"
@@ -617,34 +671,65 @@
             ></button>
           </div>
           <div class="modal-body">
-            <form id="editCourseForm">
-              <input type="hidden" id="editCourseId" />
-              <div class="mb-3">
-                <label class="form-label">Nome do Curso *</label>
-                <input
-                  type="text"
-                  class="form-control form-control-curso"
-                  id="editCourseName"
-                  required
-                />
+            <form id="editStudentForm">
+              <input type="hidden" id="editStudentId" />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Nome Completo *</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-curso"
+                    id="editStudentName"
+                    required
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">E-mail *</label>
+                  <input
+                    type="email"
+                    class="form-control form-control-curso"
+                    id="editStudentEmail"
+                    required
+                  />
+                </div>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Descrição</label>
-                <textarea
-                  class="form-control form-control-curso"
-                  id="editCourseDescription"
-                  rows="3"
-                ></textarea>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Telefone</label>
+                  <input
+                    type="tel"
+                    class="form-control form-control-curso"
+                    id="editStudentPhone"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Data de Nascimento</label>
+                  <input
+                    type="date"
+                    class="form-control form-control-curso"
+                    id="editStudentBirthDate"
+                  />
+                </div>
               </div>
-              <div class="mb-3">
-                <label class="form-label">Duração (Anos) *</label>
-                <input
-                  type="number"
-                  class="form-control form-control-curso"
-                  id="editCourseDuration"
-                  required
-                  min="1"
-                />
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">CPF</label>
+                  <input
+                    type="text"
+                    class="form-control form-control-curso"
+                    id="editStudentCpf"
+                  />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Status</label>
+                  <select
+                    class="form-select form-control-curso"
+                    id="editStudentStatus"
+                  >
+                    <option value="active">Ativo</option>
+                    <option value="inactive">Inativo</option>
+                  </select>
+                </div>
               </div>
             </form>
           </div>
@@ -659,9 +744,9 @@
             <button
               type="button"
               class="btn btn-primary btn-curso-primary"
-              id="updateCourseBtn"
+              id="updateStudentBtn"
             >
-              Atualizar Curso
+              Atualizar Aluno
             </button>
           </div>
         </div>
@@ -682,7 +767,7 @@
             ></button>
           </div>
           <div class="modal-body" id="confirmModalBody">
-            Tem certeza que deseja excluir este curso?
+            Tem certeza que deseja excluir este aluno?
           </div>
           <div class="modal-footer">
             <button
@@ -702,8 +787,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Variáveis globais
-      let coursesData = [];
+      let studentsData = [];
       let currentPage = 1;
       const itemsPerPage = 10;
       let currentEditId = null;
@@ -711,10 +795,11 @@
 
       document.addEventListener("DOMContentLoaded", function () {
         checkAuth();
-
         setupEventListeners();
 
-        fetchCourses();
+        fetchStudents();
+
+        setupMasks();
       });
 
       function checkAuth() {
@@ -724,16 +809,54 @@
         }
       }
 
+      function setupMasks() {
+        const phoneInput = document.getElementById("studentPhone");
+        phoneInput.addEventListener("input", function (e) {
+          const value = e.target.value.replace(/\D/g, "");
+          if (value.length > 10) {
+            e.target.value = `(${value.substring(0, 2)}) ${value.substring(
+              2,
+              7
+            )}-${value.substring(7, 11)}`;
+          } else if (value.length > 2) {
+            e.target.value = `(${value.substring(0, 2)}) ${value.substring(
+              2,
+              6
+            )}-${value.substring(6, 10)}`;
+          } else if (value.length > 0) {
+            e.target.value = `(${value}`;
+          }
+        });
+
+        const cpfInput = document.getElementById("studentCpf");
+        cpfInput.addEventListener("input", function (e) {
+          const value = e.target.value.replace(/\D/g, "");
+          if (value.length > 9) {
+            e.target.value = `${value.substring(0, 3)}.${value.substring(
+              3,
+              6
+            )}.${value.substring(6, 9)}-${value.substring(9, 11)}`;
+          } else if (value.length > 6) {
+            e.target.value = `${value.substring(0, 3)}.${value.substring(
+              3,
+              6
+            )}.${value.substring(6)}`;
+          } else if (value.length > 3) {
+            e.target.value = `${value.substring(0, 3)}.${value.substring(3)}`;
+          }
+        });
+      }
+
       function setupEventListeners() {
         document.getElementById("logoutBtn").addEventListener("click", logout);
 
         document
-          .getElementById("saveCourseBtn")
-          .addEventListener("click", addCourse);
+          .getElementById("saveStudentBtn")
+          .addEventListener("click", addStudent);
 
         document
-          .getElementById("updateCourseBtn")
-          .addEventListener("click", updateCourse);
+          .getElementById("updateStudentBtn")
+          .addEventListener("click", updateStudent);
 
         document
           .getElementById("confirmActionBtn")
@@ -741,39 +864,39 @@
             if (confirmCallback) confirmCallback();
           });
 
-        const modals = ["addCourseModal", "editCourseModal", "confirmModal"];
+        const modals = ["addStudentModal", "editStudentModal", "confirmModal"];
         modals.forEach((modalId) => {
           const modal = document.getElementById(modalId);
           modal.addEventListener("hidden.bs.modal", function () {
-            if (modalId === "addCourseModal") {
-              document.getElementById("courseForm").reset();
+            if (modalId === "addStudentModal") {
+              document.getElementById("studentForm").reset();
             }
           });
         });
       }
 
-      async function fetchCourses() {
+      async function fetchStudents() {
         try {
           showLoading(true);
           const token = localStorage.getItem("token");
-          const response = await fetch("/cursos/", {
+          const response = await fetch("/alunos/", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
 
           if (response.ok) {
-            coursesData = await response.json();
-            renderCoursesTable();
+            studentsData = await response.json();
+            renderStudentsTable();
             updatePagination();
           } else if (response.status === 401) {
             logout();
           } else {
-            showAlert("Erro ao carregar cursos", "danger");
+            showAlert("Erro ao carregar alunos", "danger");
           }
         } catch (error) {
           showAlert("Erro de conexão com o servidor", "danger");
-          console.error("Erro ao buscar cursos:", error);
+          console.error("Erro ao buscar alunos:", error);
         } finally {
           showLoading(false);
         }
@@ -803,38 +926,66 @@
         }
       }
 
-      function renderCoursesTable(page = 1) {
+      function renderStudentsTable(page = 1) {
         currentPage = page;
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-        const paginatedData = coursesData.slice(startIndex, endIndex);
+        const paginatedData = studentsData.slice(startIndex, endIndex);
 
-        const tableBody = document.getElementById("coursesTable");
+        const tableBody = document.getElementById("studentsTable");
         tableBody.innerHTML = "";
 
         if (paginatedData.length === 0) {
           tableBody.innerHTML = `
                     <tr>
-                        <td colspan="4" class="text-center py-4">Nenhum curso cadastrado</td>
+                        <td colspan="6" class="text-center py-4">Nenhum aluno cadastrado</td>
                     </tr>
                 `;
           return;
         }
 
-        paginatedData.forEach((course, index) => {
+        paginatedData.forEach((student, index) => {
           const row = document.createElement("tr");
           row.innerHTML = `
-                    <td>${escapeHtml(course.name)}</td>
-                    <td>${escapeHtml(course.description || "-")}</td>
-                    <td>${course.time}</td>
+                    <td>${startIndex + index + 1}</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-curso me-3">
+                                ${student.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div class="fw-semibold">${escapeHtml(
+                                  student.name
+                                )}</div>
+                                <small class="text-muted">ID: ${
+                                  student.id
+                                }</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>${escapeHtml(student.email)}</td>
+                    <td>${
+                      student.phone
+                        ? formatPhone(escapeHtml(student.phone))
+                        : "-"
+                    }</td>
+                    <td>
+                        <span class="badge-curso ${
+                          student.status === "active"
+                            ? "badge-active"
+                            : "badge-inactive"
+                        }">
+                            ${student.status === "active" ? "Ativo" : "Inativo"}
+                        </span>
+                    </td>
                     <td>
                         <button class="btn btn-sm btn-outline-primary action-btn me-2" 
-                                onclick="openEditModal(${course.id})" 
+                                onclick="openEditModal(${student.id})" 
                                 title="Editar">
                             <i class="fas fa-edit"></i>
                         </button>
                         <button class="btn btn-sm btn-outline-danger action-btn" 
-                                onclick="confirmDelete(${course.id})" 
+                                onclick="confirmDelete(${student.id})" 
                                 title="Excluir">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -843,16 +994,16 @@
           tableBody.appendChild(row);
         });
 
-        document.getElementById("totalCourses").textContent =
-          coursesData.length;
-        document.getElementById("totalCount").textContent = coursesData.length;
+        document.getElementById("totalStudents").textContent =
+          studentsData.length;
+        document.getElementById("totalCount").textContent = studentsData.length;
         document.getElementById("showingCount").textContent = `${
           startIndex + 1
-        }-${Math.min(endIndex, coursesData.length)}`;
+        }-${Math.min(endIndex, studentsData.length)}`;
       }
 
       function updatePagination() {
-        const totalPages = Math.ceil(coursesData.length / itemsPerPage);
+        const totalPages = Math.ceil(studentsData.length / itemsPerPage);
         const pagination = document.getElementById("pagination");
         pagination.innerHTML = "";
 
@@ -889,154 +1040,175 @@
       }
 
       function changePage(page) {
-        if (page < 1 || page > Math.ceil(coursesData.length / itemsPerPage))
+        if (page < 1 || page > Math.ceil(studentsData.length / itemsPerPage))
           return;
-        renderCoursesTable(page);
+        renderStudentsTable(page);
       }
 
-      async function addCourse() {
-        const name = document.getElementById("courseName").value.trim();
-        const description = document
-          .getElementById("courseDescription")
-          .value.trim();
-        const duration = document.getElementById("courseDuration").value;
+      async function addStudent() {
+        const name = document.getElementById("studentName").value.trim();
+        const email = document.getElementById("studentEmail").value.trim();
+        const phone = document
+          .getElementById("studentPhone")
+          .value.replace(/\D/g, "");
+        const birthDate = document.getElementById("studentBirthDate").value;
+        const cpf = document
+          .getElementById("studentCpf")
+          .value.replace(/\D/g, "");
+        const status = document.getElementById("studentStatus").value;
 
-        if (!name || !duration) {
-          showAlert("Nome e duração são obrigatórios", "warning");
+        if (!name || !email) {
+          showAlert("Nome e e-mail são obrigatórios", "warning");
           return;
         }
 
-        const courseData = {
+        const studentData = {
           name,
-          description: description || null,
-          time: parseInt(duration),
+          email,
+          phone: phone || null,
+          birth_date: birthDate || null,
+          cpf: cpf || null,
+          status,
         };
 
         try {
           showLoading(true);
           const token = localStorage.getItem("token");
-          const response = await fetch("/cursos/", {
+          const response = await fetch("/alunos/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(courseData),
+            body: JSON.stringify(studentData),
           });
 
           if (response.ok) {
             const modal = bootstrap.Modal.getInstance(
-              document.getElementById("addCourseModal")
+              document.getElementById("addStudentModal")
             );
             modal.hide();
 
-            showAlert("Curso cadastrado com sucesso!", "success");
-            fetchCourses();
+            showAlert("Aluno cadastrado com sucesso!", "success");
+            fetchStudents();
           } else {
             const error = await response.json();
-            showAlert(error.detail || "Erro ao cadastrar curso", "danger");
+            showAlert(error.detail || "Erro ao cadastrar aluno", "danger");
           }
         } catch (error) {
           showAlert("Erro de conexão com o servidor", "danger");
-          console.error("Erro ao salvar curso:", error);
+          console.error("Erro ao salvar aluno:", error);
         } finally {
           showLoading(false);
         }
       }
 
-      async function openEditModal(courseId) {
+      async function openEditModal(studentId) {
         try {
           showLoading(true);
           const token = localStorage.getItem("token");
-          const response = await fetch(`/cursos/${courseId}`, {
+          const response = await fetch(`/alunos/${studentId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
 
           if (response.ok) {
-            const course = await response.json();
+            const student = await response.json();
 
-            document.getElementById("editCourseId").value = course.id;
-            document.getElementById("editCourseName").value = course.name;
-            document.getElementById("editCourseDescription").value =
-              course.description || "";
-            document.getElementById("editCourseDuration").value = course.time;
+            document.getElementById("editStudentId").value = student.id;
+            document.getElementById("editStudentName").value = student.name;
+            document.getElementById("editStudentEmail").value = student.email;
+            document.getElementById("editStudentPhone").value =
+              student.phone || "";
+            document.getElementById("editStudentBirthDate").value =
+              student.birth_date || "";
+            document.getElementById("editStudentCpf").value = student.cpf || "";
+            document.getElementById("editStudentStatus").value =
+              student.status || "active";
 
             const modal = new bootstrap.Modal(
-              document.getElementById("editCourseModal")
+              document.getElementById("editStudentModal")
             );
             modal.show();
           } else {
-            showAlert("Erro ao carregar dados do curso", "danger");
+            showAlert("Erro ao carregar dados do aluno", "danger");
           }
         } catch (error) {
           showAlert("Erro de conexão com o servidor", "danger");
-          console.error("Erro ao editar curso:", error);
+          console.error("Erro ao editar aluno:", error);
         } finally {
           showLoading(false);
         }
       }
 
-      async function updateCourse() {
-        const id = document.getElementById("editCourseId").value;
-        const name = document.getElementById("editCourseName").value.trim();
-        const description = document
-          .getElementById("editCourseDescription")
-          .value.trim();
-        const duration = document.getElementById("editCourseDuration").value;
+      async function updateStudent() {
+        const id = document.getElementById("editStudentId").value;
+        const name = document.getElementById("editStudentName").value.trim();
+        const email = document.getElementById("editStudentEmail").value.trim();
+        const phone = document
+          .getElementById("editStudentPhone")
+          .value.replace(/\D/g, "");
+        const birthDate = document.getElementById("editStudentBirthDate").value;
+        const cpf = document
+          .getElementById("editStudentCpf")
+          .value.replace(/\D/g, "");
+        const status = document.getElementById("editStudentStatus").value;
 
-        if (!name || !duration) {
-          showAlert("Nome e duração são obrigatórios", "warning");
+        if (!name || !email) {
+          showAlert("Nome e e-mail são obrigatórios", "warning");
           return;
         }
 
-        const courseData = {
+        const studentData = {
           name,
-          description: description || null,
-          time: parseInt(duration),
+          email,
+          phone: phone || null,
+          birth_date: birthDate || null,
+          cpf: cpf || null,
+          status,
         };
 
         try {
           showLoading(true);
           const token = localStorage.getItem("token");
-          const response = await fetch(`/cursos/${id}`, {
+          const response = await fetch(`/alunos/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify(courseData),
+            body: JSON.stringify(studentData),
           });
 
           if (response.ok) {
             const modal = bootstrap.Modal.getInstance(
-              document.getElementById("editCourseModal")
+              document.getElementById("editStudentModal")
             );
             modal.hide();
 
-            showAlert("Curso atualizado com sucesso!", "success");
-            fetchCourses();
+            showAlert("Aluno atualizado com sucesso!", "success");
+            fetchStudents();
           } else {
             const error = await response.json();
-            showAlert(error.detail || "Erro ao atualizar curso", "danger");
+            showAlert(error.detail || "Erro ao atualizar aluno", "danger");
           }
         } catch (error) {
           showAlert("Erro de conexão com o servidor", "danger");
-          console.error("Erro ao atualizar curso:", error);
+          console.error("Erro ao atualizar aluno:", error);
         } finally {
           showLoading(false);
         }
       }
 
-      function confirmDelete(courseId) {
-        currentEditId = courseId;
-        confirmCallback = deleteCourse;
+      function confirmDelete(studentId) {
+        currentEditId = studentId;
+        confirmCallback = deleteStudent;
 
         document.getElementById("confirmModalTitle").textContent =
           "Confirmar Exclusão";
         document.getElementById("confirmModalBody").textContent =
-          "Tem certeza que deseja excluir este curso? Esta ação não pode ser desfeita.";
+          "Tem certeza que deseja excluir este aluno? Esta ação não pode ser desfeita.";
         document.getElementById("confirmActionBtn").className =
           "btn btn-danger";
 
@@ -1046,11 +1218,11 @@
         modal.show();
       }
 
-      async function deleteCourse() {
+      async function deleteStudent() {
         try {
           showLoading(true);
           const token = localStorage.getItem("token");
-          const response = await fetch(`/cursos/${currentEditId}`, {
+          const response = await fetch(`/alunos/${currentEditId}`, {
             method: "DELETE",
             headers: {
               Authorization: `Bearer ${token}`,
@@ -1058,8 +1230,8 @@
           });
 
           if (response.ok) {
-            showAlert("Curso excluído com sucesso", "success");
-            fetchCourses();
+            showAlert("Aluno excluído com sucesso", "success");
+            fetchStudents();
 
             const modal = bootstrap.Modal.getInstance(
               document.getElementById("confirmModal")
@@ -1067,11 +1239,11 @@
             modal.hide();
           } else {
             const error = await response.json();
-            showAlert(error.detail || "Erro ao excluir curso", "danger");
+            showAlert(error.detail || "Erro ao excluir aluno", "danger");
           }
         } catch (error) {
           showAlert("Erro de conexão com o servidor", "danger");
-          console.error("Erro ao excluir curso:", error);
+          console.error("Erro ao excluir aluno:", error);
         } finally {
           showLoading(false);
         }
@@ -1119,6 +1291,15 @@
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&#039;");
+      }
+
+      function formatPhone(phone) {
+        const cleaned = phone.replace(/\D/g, "");
+        const match = cleaned.match(/^(\d{2})(\d{4,5})(\d{4})$/);
+        if (match) {
+          return `(${match[1]}) ${match[2]}-${match[3]}`;
+        }
+        return phone;
       }
 
       window.changePage = changePage;
