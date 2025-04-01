@@ -190,5 +190,5 @@ We welcome contributions! Please follow these steps:
 
 For questions or support, please contact:  
 **Wesnei Paiva**  
-📧 [wesneipaiva@gmail.com](mailto:wesneipaiva@gmail.com)  
+📧 [wesneipaiva@gmail.com](mailto:wesneipaiva@gmail.com)/  
 🔗 [API Documentation](http://localhost:8000/docs) (when running locally)
