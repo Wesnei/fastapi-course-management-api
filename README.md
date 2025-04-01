@@ -113,6 +113,17 @@ Access the API at `http://localhost:8000` and interactive docs at `http://localh
 | `/alunos/{student_id}` | PUT    | Update student               | Yes       |
 | `/alunos/{student_id}` | DELETE | Delete student               | Yes       |
 
+## 🧑‍🏫 Teacher Management
+
+| Endpoint               | Method | Description                  | Protected |
+|------------------------|--------|------------------------------|-----------|
+| `/professores/`             | GET    | List all teacher           | Yes       |
+| `/professores/`             | POST   | Create new teacher           | Yes       |
+| `/professores/{teacher_id}` | GET    | Get teacher details          | Yes       |
+| `/professores/{teacher_id}` | PUT    | Update teacher               | Yes       |
+| `/professores/{teacher_id}` | DELETE | Delete teacher               | Yes       |
+
+
 ## 📝 Enrollment System
 
 | Endpoint                   | Method | Description                  | Protected |
