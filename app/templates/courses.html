@@ -144,11 +144,13 @@
         font-weight: 500;
         border-radius: 8px;
         transition: all 0.3s;
+        color: white; /* Texto branco */
       }
 
       .btn-curso-primary:hover {
         background-color: var(--secondary-color);
         transform: translateY(-2px);
+        color: white;
       }
 
       .btn-curso-outline {
@@ -174,6 +176,21 @@
         color: var(--success-color);
       }
 
+      .badge-inactive {
+        background-color: rgba(247, 37, 133, 0.1);
+        color: var(--danger-color);
+      }
+
+      /* Badge do Contador de Cursos */
+      .badge-curso-count {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.5rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
       /* Formulários */
       .form-control-curso {
         border-radius: 8px;
@@ -185,14 +202,6 @@
       .form-control-curso:focus {
         border-color: var(--accent-color);
         box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
-      }
-
-      /* Alertas */
-      .alert-curso {
-        border-radius: 8px;
-        padding: 12px 16px;
-        margin-bottom: 20px;
-        border: none;
       }
 
       /* Footer */
@@ -378,6 +387,11 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link nav-link-curso" href="/professores">
+                <i class="fas fa-chalkboard-teacher me-2"></i> Professores
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link nav-link-curso" href="/matriculas">
                 <i class="fas fa-clipboard-list me-1"></i> Matrículas
               </a>
@@ -420,12 +434,10 @@
         <div class="card card-curso">
           <div
             class="card-header card-header-curso d-flex justify-content-between align-items-center"
-          >
-            <h5 class="mb-0">Lista de Cursos</h5>
-            <div class="text-muted small">
-              Total: <span id="totalCourses" class="fw-bold">0</span> cursos
+            <div class="card-header card-header-curso d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">Lista de Cursos</h5>
+              <span class="badge-curso-count" id="totalCourses">0 cursos </span>
             </div>
-          </div>
           <div class="card-body p-0">
             <div class="table-responsive">
               <table class="table table-curso table-hover mb-0">
@@ -843,8 +855,7 @@
           tableBody.appendChild(row);
         });
 
-        document.getElementById("totalCourses").textContent =
-          coursesData.length;
+     document.getElementById("totalCourses").textContent = `${coursesData.length} cursos`;
         document.getElementById("totalCount").textContent = coursesData.length;
         document.getElementById("showingCount").textContent = `${
           startIndex + 1

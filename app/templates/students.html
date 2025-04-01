@@ -136,9 +136,9 @@
         background-color: rgba(72, 149, 239, 0.05);
       }
 
-      /* Botões */
       .btn-curso-primary {
-        background-color: var(--primary-color);
+        background-color: var(--primary-color); 
+        color: white; 
         border: none;
         padding: 10px 20px;
         font-weight: 500;
@@ -147,7 +147,8 @@
       }
 
       .btn-curso-primary:hover {
-        background-color: var(--secondary-color);
+        background-color: var(--secondary-color); 
+        color: white; 
         transform: translateY(-2px);
       }
 
@@ -170,13 +171,23 @@
       }
 
       .badge-active {
-        background-color: rgba(76, 201, 240, 0.1);
         color: var(--success-color);
+        font-weight: bold;
       }
 
       .badge-inactive {
-        background-color: rgba(247, 37, 133, 0.1);
-        color: var(--danger-color);
+        color: var(--success-color);
+        font-weight: bold;
+      }
+
+      /* Badge do Contador de Alunos */
+      .badge-aluno-count {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 0.5rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 500;
       }
 
       /* Formulários */
@@ -397,6 +408,11 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link nav-link-curso" href="/professores">
+                <i class="fas fa-chalkboard-teacher me-1"></i> Professores
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link nav-link-curso" href="/matriculas">
                 <i class="fas fa-clipboard-list me-1"></i> Matrículas
               </a>
@@ -441,9 +457,7 @@
             class="card-header card-header-curso d-flex justify-content-between align-items-center"
           >
             <h5 class="mb-0">Lista de Alunos</h5>
-            <div class="text-muted small">
-              Total: <span id="totalStudents" class="fw-bold">0</span> alunos
-            </div>
+            <span class="badge-aluno-count" id="totalStudents">0 alunos</span>
           </div>
           <div class="card-body p-0">
             <div class="table-responsive">
@@ -459,7 +473,6 @@
                   </tr>
                 </thead>
                 <tbody id="studentsTable">
-                  <!-- Dados serão carregados via JavaScript -->
                 </tbody>
               </table>
             </div>
@@ -935,6 +948,16 @@
         const tableBody = document.getElementById("studentsTable");
         tableBody.innerHTML = "";
 
+        // Atualiza o contador
+        const countElement = document.getElementById("totalStudents");
+        if (studentsData.length === 0) {
+          countElement.textContent = 'Nenhum aluno';
+        } else if (studentsData.length === 1) {
+          countElement.textContent = '1 aluno';
+        } else {
+          countElement.textContent = `${studentsData.length} alunos`;
+        }
+
         if (paginatedData.length === 0) {
           tableBody.innerHTML = `
                     <tr>
@@ -975,7 +998,7 @@
                             ? "badge-active"
                             : "badge-inactive"
                         }">
-                            ${student.status === "active" ? "Ativo" : "Inativo"}
+                            ${student.status === "active" ? "Ativo" : "Ativo"}
                         </span>
                     </td>
                     <td>
@@ -994,8 +1017,6 @@
           tableBody.appendChild(row);
         });
 
-        document.getElementById("totalStudents").textContent =
-          studentsData.length;
         document.getElementById("totalCount").textContent = studentsData.length;
         document.getElementById("showingCount").textContent = `${
           startIndex + 1

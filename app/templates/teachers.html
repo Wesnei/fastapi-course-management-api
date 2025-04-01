@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestão de Professores | CursoPro</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3a0ca3;
+        --accent-color: #4895ef;
+        --dark-color: #2b2d42;
+        --light-color: #f8f9fa;
+        --success-color: #4cc9f0;
+        --danger-color: #f72585;
+        --warning-color: #f8961e;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background-color: #f8fafc;
+        color: #2d3748;
+      }
+
+      /* Navbar Estilizado */
+      .navbar-curso-pro {
+        background-color: #2c3e50;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 0.8rem 1.5rem;
+      }
+
+      .navbar-brand-curso {
+        font-weight: 700;
+        color: white;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+      }
+
+      .navbar-brand-curso i {
+        margin-right: 10px;
+        color: var(--accent-color);
+      }
+
+      .nav-link-curso {
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        margin: 0 0.25rem;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .nav-link-curso:hover,
+      .nav-link-curso.active {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .logout-btn-curso {
+        color: var(--danger-color);
+        font-weight: 600;
+        background-color: rgba(247, 37, 133, 0.1);
+        border-radius: 6px;
+      }
+
+      .logout-btn-curso:hover {
+        color: white;
+        background-color: var(--danger-color);
+      }
+
+      /* Container Principal */
+      .main-container {
+        padding-top: 80px;
+        padding-bottom: 40px;
+        min-height: calc(100vh - 200px);
+      }
+
+      /* Cards */
+      .card-curso {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 24px;
+      }
+
+      .card-curso:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-header-curso {
+        background-color: white;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        font-weight: 600;
+        padding: 20px;
+        border-radius: 12px 12px 0 0 !important;
+      }
+
+      /* Tabela */
+      .table-curso {
+        margin-bottom: 0;
+      }
+
+      .table-curso thead {
+        background-color: var(--primary-color);
+        color: white;
+      }
+
+      .table-curso th {
+        font-weight: 500;
+        padding: 15px;
+        vertical-align: middle;
+      }
+
+      .table-curso td {
+        padding: 12px 15px;
+        vertical-align: middle;
+        border-top: 1px solid rgba(0, 0, 0, 0.03);
+      }
+
+      .table-curso tr:hover {
+        background-color: rgba(72, 149, 239, 0.05);
+      }
+
+      .btn-curso-primary {
+        background-color: var(--primary-color); 
+        color: white; 
+        border: none;
+        padding: 10px 20px;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.3s;
+}
+
+      .btn-curso-primary:hover {
+        background-color: var(--secondary-color); 
+        color: white; 
+        transform: translateY(-2px);
+        }
+
+      .btn-curso-outline {
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        background-color: transparent;
+      }
+
+      .btn-curso-outline:hover {
+        background-color: rgba(67, 97, 238, 0.1);
+      }
+
+      /* Badges */
+      .badge-curso {
+        font-weight: 500;
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: 0.8rem;
+      }
+
+      .badge-active {
+        background-color: rgba(76, 201, 240, 0.1);
+        color: var(--success-color);
+      }
+
+      .badge-inactive {
+        background-color: rgba(247, 37, 133, 0.1);
+        color: var(--danger-color);
+      }
+
+      .badge-teacher-count {
+        background-color: var(--primary-color);
+        font-size: 0.9rem;
+        padding: 0.5rem 0.8rem;
+        font-weight: 500;
+        color: white;
+      }
+
+      /* Formulários */
+      .form-control-curso {
+        border-radius: 8px;
+        padding: 10px 15px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+      }
+
+      .form-control-curso:focus {
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
+      }
+
+      /* Avatar */
+      .avatar-curso {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        background-color: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--dark-color);
+        font-weight: 600;
+      }
+
+      /* Alertas */
+      .alert-curso {
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        border: none;
+      }
+
+      /* Footer */
+      footer {
+        background-color: #2c3e50;
+        color: white;
+        padding: 60px 0 30px;
+        margin-top: 80px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .footer-main {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 20px;
+      }
+
+      .footer-column {
+        margin-bottom: 30px;
+      }
+
+      .footer-logo {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: #3498db;
+        text-align: center;
+      }
+
+      .footer-description {
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        opacity: 0.9;
+      }
+
+      .footer-column h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 10px;
+      }
+
+      .footer-column h3::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 50px;
+        height: 2px;
+        background: #3498db;
+      }
+
+      .footer-links {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-links li {
+        margin-bottom: 12px;
+      }
+
+      .footer-links a {
+        color: #ecf0f1;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        display: inline-block;
+      }
+
+      .footer-links a:hover {
+        color: #3498db;
+        transform: translateX(5px);
+      }
+
+      .contact-info {
+        list-style: none;
+        padding: 0;
+      }
+
+      .contact-info li {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+      }
+
+      .contact-info i {
+        margin-right: 10px;
+        color: #3498db;
+        width: 20px;
+        text-align: center;
+      }
+
+      .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .social-links a {
+        color: white;
+        background: rgba(255, 255, 255, 0.1);
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+
+      .social-links a:hover {
+        background: #3498db;
+        transform: translateY(-3px);
+      }
+
+      /* Modal Estilizado */
+      .modal-curso .modal-header {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      .modal-curso .modal-title {
+        font-weight: 600;
+        color: var(--dark-color);
+      }
+
+      .modal-curso .modal-footer {
+        border-top: none;
+      }
+
+      .modal-curso .btn-close {
+        box-shadow: none;
+      }
+
+      /* Responsividade */
+      @media (max-width: 768px) {
+        .table-responsive {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+
+        .navbar-brand-curso span {
+          display: none;
+        }
+
+        .footer-main {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .footer-main {
+          grid-template-columns: 1fr;
+        }
+        
+        .footer-bottom {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-curso-pro fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand navbar-brand-curso" href="#">
+          <i class="fas fa-graduation-cap"></i>
+          <span>CursoPro</span>
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link nav-link-curso" href="/home">
+                <i class="fas fa-home me-1"></i> Início
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-curso" href="/cursos">
+                <i class="fas fa-book me-1"></i> Cursos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-curso" href="/alunos">
+                <i class="fas fa-users me-1"></i> Alunos
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-curso active" href="/professores">
+                <i class="fas fa-chalkboard-teacher me-1"></i> Professores
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link nav-link-curso" href="/matriculas">
+                <i class="fas fa-clipboard-list me-1"></i> Matrículas
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link nav-link-curso logout-btn-curso"
+                href="#"
+                id="logoutBtn"
+              >
+                <i class="fas fa-sign-out-alt me-1"></i> Sair
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Container Principal -->
+    <div class="main-container">
+      <div class="container">
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <h2 class="fw-bold mb-0">
+              <i class="fas fa-chalkboard-teacher me-2"></i> Gerenciamento de Professores
+            </h2>
+          </div>
+          <div class="col-md-6 text-end">
+            <button class="btn btn-curso-primary" data-bs-toggle="modal" data-bs-target="#addTeacherModal">
+              <i class="fas fa-plus me-2"></i> Adicionar Professor
+            </button>
+          </div>
+        </div>
+
+        <!-- Card da Tabela -->
+        <div class="card card-curso">
+          <div
+            class="card-header card-header-curso d-flex justify-content-between align-items-center"
+          >
+            <h5 class="mb-0">Lista de Professores</h5>
+            <span class="badge badge-teacher-count rounded-pill" id="teacherCount">0 professores</span>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-danger alert-curso" id="error" style="display: none;"></div>
+            
+            <div class="table-responsive">
+              <table class="table table-curso table-hover">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Especialidade</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody id="teachersTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card-footer d-flex justify-content-between align-items-center bg-white">
+            <div class="text-muted small">
+              Mostrando <span id="showingCount">0</span> de <span id="totalCount">0</span> registros
+            </div>
+            <nav>
+              <ul class="pagination mb-0" id="pagination">
+                <!-- Paginação será gerada via JavaScript -->
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Adição -->
+    <div class="modal fade modal-curso" id="addTeacherModal" tabindex="-1" aria-labelledby="addTeacherModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addTeacherModalLabel">Adicionar Professor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="teacherForm">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="name" class="form-label">Nome</label>
+                <input type="text" class="form-control form-control-curso" id="name" required>
+              </div>
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control form-control-curso" id="email" required>
+              </div>
+              <div class="mb-3">
+                <label for="phone" class="form-label">Telefone</label>
+                <input type="tel" class="form-control form-control-curso" id="phone">
+              </div>
+              <div class="mb-3">
+                <label for="specialty" class="form-label">Especialidade</label>
+                <input type="text" class="form-control form-control-curso" id="specialty">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-curso-primary">Salvar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Edição -->
+    <div class="modal fade modal-curso" id="editTeacherModal" tabindex="-1" aria-labelledby="editTeacherModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editTeacherModalLabel">Editar Professor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form id="editTeacherForm">
+            <input type="hidden" id="editId">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="editName" class="form-label">Nome</label>
+                <input type="text" class="form-control form-control-curso" id="editName" required>
+              </div>
+              <div class="mb-3">
+                <label for="editEmail" class="form-label">Email</label>
+                <input type="email" class="form-control form-control-curso" id="editEmail" required>
+              </div>
+              <div class="mb-3">
+                <label for="editPhone" class="form-label">Telefone</label>
+                <input type="tel" class="form-control form-control-curso" id="editPhone">
+              </div>
+              <div class="mb-3">
+                <label for="editSpecialty" class="form-label">Especialidade</label>
+                <input type="text" class="form-control form-control-curso" id="editSpecialty">
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-curso-primary">Atualizar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal fade modal-curso" id="deleteTeacherModal" tabindex="-1" aria-labelledby="deleteTeacherModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteTeacherModalLabel">Confirmar Exclusão</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Tem certeza que deseja excluir este professor? Esta ação não pode ser desfeita.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <div class="footer-main">
+          <div class="footer-column">
+            <div class="footer-logo">CursoPro</div>
+            <p class="footer-description">
+              Plataforma de gestão educacional que simplifica a administração de cursos,
+              alunos e matrículas, proporcionando uma experiência completa para instituições de ensino.
+            </p>
+            <div class="social-links">
+              <a href="#"><i class="fab fa-facebook-f"></i></a>
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-instagram"></i></a>
+              <a href="#"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Links Rápidos</h3>
+            <ul class="footer-links">
+              <li><a href="/home"><i class="fas fa-chevron-right me-2"></i>Início</a></li>
+              <li><a href="/cursos"><i class="fas fa-chevron-right me-2"></i>Cursos</a></li>
+              <li><a href="/alunos"><i class="fas fa-chevron-right me-2"></i>Alunos</a></li>
+              <li><a href="/matriculas"><i class="fas fa-chevron-right me-2"></i>Matrículas</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right me-2"></i>Sobre Nós</a></li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Contato</h3>
+            <ul class="contact-info">
+              <li>
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Av. Paulista, 1000 - São Paulo, SP</span>
+              </li>
+              <li>
+                <i class="fas fa-phone-alt"></i>
+                <span>(11) 1234-5678</span>
+              </li>
+              <li>
+                <i class="fas fa-envelope"></i>
+                <span>contato@cursopro.com.br</span>
+              </li>
+              <li>
+                <i class="fas fa-clock"></i>
+                <span>Seg-Sex: 9:00 - 18:00</span>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="footer-column">
+            <h3>Newsletter</h3>
+            <p class="footer-description">
+              Assine nossa newsletter para receber atualizações e novidades sobre a plataforma.
+            </p>
+            <form class="d-flex">
+              <input type="email" class="form-control me-2" placeholder="Seu e-mail">
+              <button class="btn btn-primary" type="submit">Assinar</button>
+            </form>
+          </div>
+        </div>
+        
+        <div class="text-center pt-4 border-top border-secondary">
+          <p class="mb-0">&copy; 2025 CursoPro. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Variáveis globais
+      let currentEditId = null;
+      let deleteTeacherId = null;
+      let currentPage = 1;
+      const itemsPerPage = 10;
+      let teachersData = [];
+
+      document.addEventListener('DOMContentLoaded', function() {
+        checkAuth();
+        fetchTeachers();
+        
+        // Formulário de adição
+        document.getElementById('teacherForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          handleSubmit(false);
+        });
+        
+        // Formulário de edição
+        document.getElementById('editTeacherForm').addEventListener('submit', function(e) {
+          e.preventDefault();
+          handleSubmit(true);
+        });
+        
+        // Botão de confirmação de exclusão
+        document.getElementById('confirmDelete').addEventListener('click', function() {
+          if (deleteTeacherId) {
+            deleteTeacher(deleteTeacherId);
+          }
+        });
+        
+        document.getElementById("logoutBtn").addEventListener("click", logout);
+      });
+
+      function checkAuth() {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          window.location.href = "/login";
+        }
+      }
+
+      function logout() {
+        localStorage.removeItem("token");
+        window.location.href = "/login";
+      }
+
+      async function fetchTeachers() {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch('/professores/', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          
+          if (response.ok) {
+            teachersData = await response.json();
+            renderTeachers(currentPage);
+            updatePagination();
+          } else if (response.status === 401) {
+            logout();
+          } else {
+            showError('Erro ao carregar professores');
+          }
+        } catch (error) {
+          showError('Erro ao conectar ao servidor');
+        }
+      }
+
+      function updatePagination() {
+        const totalPages = Math.ceil(teachersData.length / itemsPerPage);
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        // Botão Anterior
+        const prevLi = document.createElement('li');
+        prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+        prevLi.innerHTML = `
+          <a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Anterior</a>
+        `;
+        pagination.appendChild(prevLi);
+
+        // Números das páginas
+        for (let i = 1; i <= totalPages; i++) {
+          const pageLi = document.createElement('li');
+          pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+          pageLi.innerHTML = `
+            <a class="page-link" href="#" onclick="changePage(${i})">${i}</a>
+          `;
+          pagination.appendChild(pageLi);
+        }
+
+        // Botão Próximo
+        const nextLi = document.createElement('li');
+        nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+        nextLi.innerHTML = `
+          <a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Próximo</a>
+        `;
+        pagination.appendChild(nextLi);
+      }
+
+      function changePage(page) {
+        if (page < 1 || page > Math.ceil(teachersData.length / itemsPerPage)) return;
+        currentPage = page;
+        renderTeachers(page);
+      }
+
+      async function handleSubmit(isEdit) {
+        const modalId = isEdit ? 'editTeacherModal' : 'addTeacherModal';
+        const modal = bootstrap.Modal.getInstance(document.getElementById(modalId));
+        
+        const name = isEdit ? document.getElementById('editName').value : document.getElementById('name').value;
+        const email = isEdit ? document.getElementById('editEmail').value : document.getElementById('email').value;
+        const phone = isEdit ? document.getElementById('editPhone').value : document.getElementById('phone').value;
+        const specialty = isEdit ? document.getElementById('editSpecialty').value : document.getElementById('specialty').value;
+
+        if (!name || !email) {
+          showError('Nome e email são obrigatórios!');
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('phone', phone);
+        formData.append('specialty', specialty);
+
+        try {
+          const token = localStorage.getItem("token");
+          if (isEdit) {
+            await updateTeacher(currentEditId, formData, token);
+          } else {
+            await addTeacher(formData, token);
+          }
+          
+          // Fecha o modal após sucesso
+          if (modal) modal.hide();
+        } catch (error) {
+          showError('Erro ao salvar professor');
+        }
+      }
+
+      async function addTeacher(formData, token) {
+        const response = await fetch('/professores/?' + new URLSearchParams(formData), {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          fetchTeachers();
+          clearForm('teacherForm');
+        } else {
+          const error = await response.json();
+          showError(error.detail || 'Erro ao adicionar professor');
+        }
+      }
+
+      async function updateTeacher(id, formData, token) {
+        const response = await fetch(`/professores/${id}?` + new URLSearchParams(formData), {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          fetchTeachers();
+          clearForm('editTeacherForm');
+        } else {
+          const error = await response.json();
+          showError(error.detail || 'Erro ao atualizar professor');
+        }
+      }
+
+      function renderTeachers(page = 1) {
+        currentPage = page;
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const paginatedData = teachersData.slice(startIndex, endIndex);
+
+        const tbody = document.getElementById('teachersTableBody');
+        tbody.innerHTML = '';
+        
+        // Atualiza os contadores
+        document.getElementById('totalCount').textContent = teachersData.length;
+        document.getElementById('showingCount').textContent = `${startIndex + 1}-${Math.min(endIndex, teachersData.length)}`;
+        
+        // Atualiza o contador de professores
+        const countElement = document.getElementById('teacherCount');
+        if (teachersData.length === 0) {
+          countElement.textContent = 'Nenhum professor';
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="5" class="text-center py-4">Nenhum professor cadastrado</td>
+            </tr>
+          `;
+          return;
+        } else if (teachersData.length === 1) {
+          countElement.textContent = '1 professor';
+        } else {
+          countElement.textContent = `${teachersData.length} professores`;
+        }
+        
+        // Renderiza os professores da página atual
+        paginatedData.forEach(teacher => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="avatar-curso me-3">
+                  ${teacher.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <div class="fw-semibold">${escapeHtml(teacher.name)}</div>
+                  <small class="text-muted">ID: ${teacher.id}</small>
+                </div>
+              </div>
+            </td>
+            <td>${escapeHtml(teacher.email)}</td>
+            <td>${teacher.phone ? formatPhone(escapeHtml(teacher.phone)) : '-'}</td>
+            <td>${teacher.specialty ? escapeHtml(teacher.specialty) : '-'}</td>
+            <td>
+              <button onclick="openEditModal(${teacher.id}, '${escapeHtml(teacher.name)}', '${escapeHtml(teacher.email)}', '${teacher.phone ? escapeHtml(teacher.phone) : ''}', '${teacher.specialty ? escapeHtml(teacher.specialty) : ''}')" 
+                      class="btn btn-sm btn-outline-primary action-btn me-2">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button onclick="openDeleteModal(${teacher.id})" 
+                      class="btn btn-sm btn-outline-danger action-btn">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+
+      function openEditModal(id, name, email, phone, specialty) {
+        currentEditId = id;
+        document.getElementById('editId').value = id;
+        document.getElementById('editName').value = name;
+        document.getElementById('editEmail').value = email;
+        document.getElementById('editPhone').value = phone || '';
+        document.getElementById('editSpecialty').value = specialty || '';
+        
+        const modal = new bootstrap.Modal(document.getElementById('editTeacherModal'));
+        modal.show();
+      }
+
+      function openDeleteModal(id) {
+        deleteTeacherId = id;
+        const modal = new bootstrap.Modal(document.getElementById('deleteTeacherModal'));
+        modal.show();
+      }
+
+      async function deleteTeacher(id) {
+        try {
+          const token = localStorage.getItem("token");
+          const response = await fetch(`/professores/${id}`, {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            fetchTeachers();
+            const modal = bootstrap.Modal.getInstance(document.getElementById('deleteTeacherModal'));
+            if (modal) modal.hide();
+          } else {
+            const error = await response.json();
+            showError(error.detail || 'Erro ao excluir professor');
+          }
+        } catch (error) {
+          showError('Erro ao excluir professor');
+        } finally {
+          deleteTeacherId = null;
+        }
+      }
+
+      function clearForm(formId) {
+        document.getElementById(formId).reset();
+      }
+
+      function showError(message) {
+        const errorDiv = document.getElementById('error');
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+        setTimeout(() => {
+          errorDiv.style.display = 'none';
+        }, 3000);
+      }
+
+      function escapeHtml(unsafe) {
+        if (!unsafe) return '';
+        return unsafe
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function formatPhone(phone) {
+        const cleaned = phone.replace(/\D/g, "");
+        const match = cleaned.match(/^(\d{2})(\d{4,5})(\d{4})$/);
+        if (match) {
+          return `(${match[1]}) ${match[2]}-${match[3]}`;
+        }
+        return phone;
+      }
+
+      window.changePage = changePage;
+    </script>
+  </body>
+</html>
