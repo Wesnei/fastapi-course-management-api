@@ -159,7 +159,7 @@ function renderStudentsTable(page = 1) {
   if (paginatedData.length === 0) {
     tableBody.innerHTML = `
               <tr>
-                  <td colspan="6" class="text-center py-4">Nenhum aluno cadastrado</td>
+                  <td colspan="7" class="text-center py-4">Nenhum aluno cadastrado</td>
               </tr>
           `;
     return;
@@ -190,13 +190,11 @@ function renderStudentsTable(page = 1) {
                   ? formatPhone(escapeHtml(student.phone))
                   : "-"
               }</td>
+              <td>${escapeHtml(student.course?.name || '')}</td>
+              <td>${escapeHtml(student.university?.name || '')}</td>
               <td>
-                  <span class="badge-curso ${
-                    student.status === "active"
-                      ? "badge-active"
-                      : "badge-inactive"
-                  }">
-                      ${student.status === "active" ? "Ativo" : "Ativo"}
+                  <span class="badge ${student.status === 'active' ? 'bg-success' : 'bg-danger'}">
+                      ${student.status === 'active' ? 'Ativo' : 'Inativo'}
                   </span>
               </td>
               <td>

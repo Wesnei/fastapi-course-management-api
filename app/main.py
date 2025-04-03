@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse, HTMLResponse
 from fastapi.exceptions import RequestValidationError
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
@@ -14,6 +14,7 @@ from app.config.logging_config import setup_logging
 from app.config.settings import settings
 from app.models.course_model import Curso
 from app.routes import teachers
+from app.routes import university
 
 
 # Configuração do logging
@@ -45,6 +46,7 @@ app.include_router(courses.router, prefix="/cursos", tags=["cursos"])
 app.include_router(students.router, tags=["alunos"])  # Remova o prefix aqui
 app.include_router(teachers.router, tags=["professores"])
 app.include_router(enrollments.router, prefix="/matriculas", tags=["matriculas"])
+app.include_router(university.router)
 
 @app.on_event("startup")
 async def startup_event():
@@ -213,3 +215,11 @@ async def read_teachers(request: Request, db: Session = Depends(get_db)):
             "teachers.html",
             {"request": request, "error": "Erro ao carregar página de professores."}
         )
+
+@app.get("/universidades", response_class=HTMLResponse)
+async def universities(request: Request):
+    return templates.TemplateResponse("universities.html", {"request": request})
+
+@app.get("/matriculas", response_class=HTMLResponse)
+async def enrollments(request: Request):
+    return templates.TemplateResponse("enrollments.html", {"request": request})
