@@ -175,48 +175,36 @@ function renderStudentsTable(page = 1) {
                           ${student.name.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                          <div class="fw-semibold">${escapeHtml(
-                            student.name
-                          )}</div>
-                          <small class="text-muted">ID: ${
-                            student.id
-                          }</small>
+                          <div class="fw-semibold">${escapeHtml(student.name)}</div>
+                          <small class="text-muted">ID: ${student.id}</small>
                       </div>
                   </div>
               </td>
               <td>${escapeHtml(student.email)}</td>
-              <td>${
-                student.phone
-                  ? formatPhone(escapeHtml(student.phone))
-                  : "-"
-              }</td>
-              <td>${escapeHtml(student.course?.name || '')}</td>
-              <td>${escapeHtml(student.university?.name || '')}</td>
-              <td>
-                  <span class="badge ${student.status === 'active' ? 'bg-success' : 'bg-danger'}">
-                      ${student.status === 'active' ? 'Ativo' : 'Inativo'}
-                  </span>
+              <td>${student.phone ? formatPhone(escapeHtml(student.phone)) : "-"}</td>
+              <td class="text-center">
+                  <span class="status-badge active">Ativo</span>
               </td>
-              <td>
-                  <button class="btn btn-sm btn-outline-primary action-btn me-2" 
-                          onclick="openEditModal(${student.id})" 
-                          title="Editar">
-                      <i class="fas fa-edit"></i>
-                  </button>
-                  <button class="btn btn-sm btn-outline-danger action-btn" 
-                          onclick="confirmDelete(${student.id})" 
-                          title="Excluir">
-                      <i class="fas fa-trash"></i>
-                  </button>
+              <td class="text-center">
+                  <div class="action-buttons">
+                      <button class="btn btn-sm btn-curso-outline" 
+                              onclick="openEditModal(${student.id})" 
+                              title="Editar">
+                          <i class="fas fa-edit"></i>
+                      </button>
+                      <button class="btn btn-sm btn-delete" 
+                              onclick="confirmDelete(${student.id})" 
+                              title="Excluir">
+                          <i class="fas fa-trash"></i>
+                      </button>
+                  </div>
               </td>
           `;
     tableBody.appendChild(row);
   });
 
   document.getElementById("totalCount").textContent = studentsData.length;
-  document.getElementById("showingCount").textContent = `${
-    startIndex + 1
-  }-${Math.min(endIndex, studentsData.length)}`;
+  document.getElementById("showingCount").textContent = `${startIndex + 1}-${Math.min(endIndex, studentsData.length)}`;
 }
 
 function updatePagination() {

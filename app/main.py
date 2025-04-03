@@ -14,7 +14,7 @@ from app.config.logging_config import setup_logging
 from app.config.settings import settings
 from app.models.course_model import Curso
 from app.routes import teachers
-from app.routes import university
+from app.routes import subject
 
 
 # Configuração do logging
@@ -43,10 +43,10 @@ templates = Jinja2Templates(directory="app/templates")
 # Inclui as rotas
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(courses.router, prefix="/cursos", tags=["cursos"])
-app.include_router(students.router, tags=["alunos"])  # Remova o prefix aqui
+app.include_router(students.router, tags=["alunos"])
 app.include_router(teachers.router, tags=["professores"])
 app.include_router(enrollments.router, prefix="/matriculas", tags=["matriculas"])
-app.include_router(university.router)
+app.include_router(subject.router, tags=["disciplinas"])
 
 @app.on_event("startup")
 async def startup_event():
@@ -216,10 +216,20 @@ async def read_teachers(request: Request, db: Session = Depends(get_db)):
             {"request": request, "error": "Erro ao carregar página de professores."}
         )
 
-@app.get("/universidades", response_class=HTMLResponse)
-async def universities(request: Request):
-    return templates.TemplateResponse("universities.html", {"request": request})
-
 @app.get("/matriculas", response_class=HTMLResponse)
 async def enrollments(request: Request):
     return templates.TemplateResponse("enrollments.html", {"request": request})
+
+@app.get("/disciplinas")
+async def read_subjects(request: Request, db: Session = Depends(get_db)):
+    """
+    Rota para exibir a página de gerenciamento de disciplinas.
+    """
+    try:
+        return templates.TemplateResponse("subjects.html", {"request": request})
+    except Exception as e:
+        logger.error(f"Erro ao renderizar página de disciplinas: {str(e)}")
+        return templates.TemplateResponse(
+            "subjects.html",
+            {"request": request, "error": "Erro ao carregar página de disciplinas."}
+        )
