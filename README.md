@@ -135,7 +135,7 @@ Access the API at `http://localhost:8000` and interactive docs at `http://localh
 | `/matriculas/{enrollment_id}` | DELETE | Delete enrollment        | Yes       |
 
 
-## 📝 Discipline System
+## 📘 Discipline System
 
 | Endpoint                   | Method | Description                  | Protected |
 |----------------------------|--------|------------------------------|-----------|
