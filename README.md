@@ -132,6 +132,19 @@ Access the API at `http://localhost:8000` and interactive docs at `http://localh
 | `/matriculas/`             | POST   | Create new enrollment        | Yes       |
 | `/matriculas/{enrollment_id}` | GET | Get enrollment details   | Yes       |
 | `/matriculas/{enrollment_id}` | PUT | Update enrollment        | Yes       |
+| `/matriculas/{enrollment_id}` | DELETE | Delete enrollment        | Yes       |
+
+
+## 📝 Discipline System
+
+| Endpoint                   | Method | Description                  | Protected |
+|----------------------------|--------|------------------------------|-----------|
+| `/subjects/`             | GET    | List all subjects         | Yes       |
+| `/subjects/`             | POST   | Create new subject        | Yes       |
+| `/subjects/{subjec_id}` | GET | Get subject details   | Yes       |
+| `/subjects/{subject_id}` | PUT | Update subject      | Yes       |
+| `/subjects/{subject_id}` | DELETE | Delete subject       | Yes       |
+
 
 ## 🧪 Testing the API
 
