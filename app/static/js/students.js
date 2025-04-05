@@ -164,44 +164,66 @@ function renderStudentsTable(page = 1) {
           `;
     return;
   }
-
+  
   paginatedData.forEach((student, index) => {
     const row = document.createElement("tr");
     row.innerHTML = `
-              <td>${startIndex + index + 1}</td>
-              <td>
-                  <div class="d-flex align-items-center">
-                      <div class="avatar-curso me-3">
-                          ${student.name.charAt(0).toUpperCase()}
-                      </div>
-                      <div>
-                          <div class="fw-semibold">${escapeHtml(student.name)}</div>
-                          <small class="text-muted">ID: ${student.id}</small>
-                      </div>
-                  </div>
-              </td>
-              <td>${escapeHtml(student.email)}</td>
-              <td>${student.phone ? formatPhone(escapeHtml(student.phone)) : "-"}</td>
-              <td class="text-center">
-                  <span class="status-badge active">Ativo</span>
-              </td>
-              <td class="text-center">
-                  <div class="action-buttons">
-                      <button class="btn btn-sm btn-curso-outline" 
-                              onclick="openEditModal(${student.id})" 
-                              title="Editar">
-                          <i class="fas fa-edit"></i>
-                      </button>
-                      <button class="btn btn-sm btn-delete" 
-                              onclick="confirmDelete(${student.id})" 
-                              title="Excluir">
-                          <i class="fas fa-trash"></i>
-                      </button>
-                  </div>
-              </td>
-          `;
+      <td>${startIndex + index + 1}</td>
+      <td>
+        <div class="d-flex align-items-center">
+          <div style="
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            background-color: #4361ee !important;
+            color: white !important;
+            font-weight: bold !important;
+            margin-right: 12px !important;
+            font-size: 16px !important;
+          ">${student.name.charAt(0).toUpperCase()}</div>
+          <div>
+            <div class="fw-semibold">${escapeHtml(student.name)}</div>
+            <small class="text-muted">ID: ${student.id}</small>
+          </div>
+        </div>
+      </td>
+      <td>${escapeHtml(student.email)}</td>
+      <td>${student.phone ? formatPhone(escapeHtml(student.phone)) : "-"}</td>
+      <td class="text-center">
+        <span style="
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 4px 12px !important;
+            border-radius: 50px !important;
+            font-size: 0.8rem !important;
+            font-weight: 500 !important;
+            background-color: ${student.status === 'active' ? 'rgba(240, 255, 243, 0.1)' : 'rgba(108, 117, 125, 0.1)'} !important;
+            color: ${student.status === 'active' ? '#28a745' : '#6c757d'} !important;
+        ">
+            ${student.status === 'active' ? 'Ativo' : 'Ativo'}
+        </span>
+      </td>
+      <td class="text-center">
+        <div class="action-buttons">
+          <button class="btn btn-sm btn-curso-outline" 
+                  onclick="openEditModal(${student.id})" 
+                  title="Editar">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-sm btn-delete" 
+                  onclick="confirmDelete(${student.id})" 
+                  title="Excluir">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    `;
     tableBody.appendChild(row);
-  });
+});
 
   document.getElementById("totalCount").textContent = studentsData.length;
   document.getElementById("showingCount").textContent = `${startIndex + 1}-${Math.min(endIndex, studentsData.length)}`;
